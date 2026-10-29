@@ -1,0 +1,66 @@
+---
+import Icona from './Icona.astro';
+import { sito } from '../lib/sito';
+const anno = new Date().getFullYear();
+---
+<footer class="piede">
+  <hr class="tratteggio" />
+  <div class="contenitore griglia">
+    <div class="intro">
+      <p class="nome">arcaland</p>
+      <p>Progettiamo, produciamo, posiamo e ispezioniamo aree gioco e arredo urbano. In legno, acciaio e misto, secondo la norma EN 1176.</p>
+    </div>
+    <div>
+      <h2>Sedi</h2>
+      <ul>
+        {sito.sedi.map((s) => (
+          <li><Icona nome="mapPin" /><span><strong>{s.citta}</strong><br />{s.ruolo}</span></li>
+        ))}
+      </ul>
+    </div>
+    <div>
+      <h2>Contatti</h2>
+      <ul>
+        <li><Icona nome="mail" /><a href={`mailto:${sito.email}`}>{sito.email}</a></li>
+        <li><Icona nome="clipboard" /><a href="/richiesta">Richiedi un preventivo</a></li>
+      </ul>
+    </div>
+    <div>
+      <h2>Esplora</h2>
+      <ul class="semplice">
+        <li><a href="/prodotti">Catalogo prodotti</a></li>
+        <li><a href="/download">Download e certificazioni</a></li>
+        <li><a href="/servizi">Ispezione e manutenzione</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="contenitore fondo">
+    <p>© {anno} Arcaland, marchio di Zennaro Legnami S.r.l. · Gruppo Zennaro</p>
+    <a href="/privacy">Privacy e cookie</a>
+  </div>
+</footer>
+
+<style>
+  .piede { margin-top: var(--spazio-8); background: var(--carta-2); }
+  .griglia {
+    display: grid; gap: var(--spazio-6) var(--spazio-5);
+    grid-template-columns: 1.4fr repeat(3, 1fr);
+    padding-block: var(--spazio-7) var(--spazio-6);
+  }
+  .nome { font-family: var(--font-titoli); font-weight: 800; font-stretch: 88%; font-size: 1.6rem; letter-spacing: -0.035em; margin-bottom: var(--spazio-2); }
+  .intro p:last-child { color: var(--inchiostro-2); font-size: var(--testo-s); max-width: 34ch; }
+  h2 { font-size: var(--testo-xs); font-weight: 700; font-stretch: 100%; letter-spacing: 0.02em; color: var(--inchiostro-3); margin-bottom: var(--spazio-4); }
+  ul { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--spazio-3); font-size: var(--testo-s); }
+  li { display: flex; gap: var(--spazio-2); align-items: flex-start; }
+  li :global(svg) { width: 1.1rem; height: 1.1rem; flex: none; margin-top: 0.2rem; color: var(--cielo-scuro); }
+  li a { overflow-wrap: anywhere; text-decoration: none; }
+  li a:hover { text-decoration: underline; text-decoration-color: var(--oro); }
+  .fondo {
+    display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--spazio-3);
+    padding-block: var(--spazio-4) var(--spazio-5); border-top: 1px solid var(--linea);
+    font-size: var(--testo-xs); color: var(--inchiostro-3);
+  }
+  .fondo p { margin: 0; }
+  @media (max-width: 860px) { .griglia { grid-template-columns: 1fr 1fr; } .intro { grid-column: 1 / -1; } }
+  @media (max-width: 520px) { .griglia { grid-template-columns: 1fr; } }
+</style>

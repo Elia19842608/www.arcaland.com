@@ -1,0 +1,24 @@
+---
+import menu from 'lucide-static/icons/menu.svg?raw';
+import x from 'lucide-static/icons/x.svg?raw';
+import plus from 'lucide-static/icons/plus.svg?raw';
+import clipboard from 'lucide-static/icons/clipboard-list.svg?raw';
+import download from 'lucide-static/icons/download.svg?raw';
+import mail from 'lucide-static/icons/mail.svg?raw';
+import mapPin from 'lucide-static/icons/map-pin.svg?raw';
+import chevron from 'lucide-static/icons/chevron-down.svg?raw';
+import freccia from 'lucide-static/icons/arrow-right.svg?raw';
+import filtri from 'lucide-static/icons/sliders-horizontal.svg?raw';
+import file from 'lucide-static/icons/file-text.svg?raw';
+import check from 'lucide-static/icons/shield-check.svg?raw';
+
+const icone = { menu, x, plus, clipboard, download, mail, mapPin, chevron, freccia, filtri, file, check } as const;
+export type NomeIcona = keyof typeof icone;
+interface Props { nome: NomeIcona; class?: string }
+const { nome, class: classe } = Astro.props;
+const svg = icone[nome]
+  .replace(/<!--[\s\S]*?-->/g, '')
+  .replace('<svg', `<svg aria-hidden="true" focusable="false"${classe ? ` class="${classe}"` : ''}`)
+  .replace(/stroke-width="2"/, 'stroke-width="1.75"');
+---
+<Fragment set:html={svg} />

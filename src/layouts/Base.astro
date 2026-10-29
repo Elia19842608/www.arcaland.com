@@ -1,0 +1,46 @@
+---
+import '../styles/base.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+interface Props { titolo: string; descrizione?: string }
+const { titolo, descrizione = 'Arcaland progetta, produce, posa e ispeziona giochi e arredi urbani in legno, acciaio e misti, secondo la norma EN 1176.' } = Astro.props;
+const titoloCompleto = titolo === 'Arcaland' ? titolo : `${titolo} · Arcaland`;
+const canonico = new URL(Astro.url.pathname, Astro.site);
+---
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{titoloCompleto}</title>
+    <meta name="description" content={descrizione} />
+    <link rel="canonical" href={canonico} />
+    <meta property="og:title" content={titoloCompleto} />
+    <meta property="og:description" content={descrizione} />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="it_IT" />
+    <meta name="theme-color" content="#fbf8f2" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <slot name="head" />
+  </head>
+  <body>
+    <a class="salta" href="#contenuto">Salta al contenuto</a>
+    <Header />
+    <main id="contenuto" tabindex="-1">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>
+
+<style>
+  .salta {
+    position: fixed; left: 1rem; top: 1rem; z-index: 50;
+    padding: 0.6rem 1rem; background: var(--inchiostro); color: var(--carta);
+    border-radius: var(--raggio); font-weight: 700; text-decoration: none;
+    transform: translateY(-200%);
+  }
+  .salta:focus { transform: none; }
+  main:focus { outline: none; }
+</style>

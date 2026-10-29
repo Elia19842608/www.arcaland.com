@@ -1,0 +1,90 @@
+---
+import Icona from './Icona.astro';
+import { sito } from '../lib/sito';
+const percorso = Astro.url.pathname;
+---
+<header class="testata">
+  <div class="contenitore riga">
+    <a class="marchio" href="/" aria-label="Arcaland, vai alla home">
+      <span class="segno" aria-hidden="true"></span>
+      <span class="nome">arcaland</span>
+    </a>
+    <button class="apri-menu" type="button" aria-expanded="false" aria-controls="menu-principale">
+      <Icona nome="menu" class="i-apri" /><Icona nome="x" class="i-chiudi" />
+      <span>Menu</span>
+    </button>
+    <nav id="menu-principale" class="menu" aria-label="Principale">
+      <ul>
+        {sito.menu.map((v) => (
+          <li><a href={v.href} aria-current={percorso.startsWith(v.href) ? 'page' : undefined}>{v.etichetta}</a></li>
+        ))}
+      </ul>
+      <a class="bottone bottone-primario cta" href="/richiesta"><Icona nome="clipboard" />Richiedi preventivo</a>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const btn = document.querySelector<HTMLButtonElement>('.apri-menu');
+  const menu = document.getElementById('menu-principale');
+  btn?.addEventListener('click', () => {
+    const aperto = btn.getAttribute('aria-expanded') === 'true';
+    btn.setAttribute('aria-expanded', String(!aperto));
+    menu?.classList.toggle('aperto', !aperto);
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && btn?.getAttribute('aria-expanded') === 'true') {
+      btn.setAttribute('aria-expanded', 'false');
+      menu?.classList.remove('aperto');
+      btn.focus();
+    }
+  });
+</script>
+
+<style>
+  .testata {
+    position: sticky; top: 0; z-index: 20;
+    background: color-mix(in srgb, var(--carta) 92%, transparent);
+    backdrop-filter: saturate(1.4) blur(10px);
+    border-bottom: 1px solid var(--linea);
+  }
+  .riga { display: flex; align-items: center; gap: var(--spazio-5); min-height: 4.25rem; }
+  .marchio { display: inline-flex; align-items: center; gap: 0.55rem; text-decoration: none; margin-right: auto; }
+  .segno {
+    width: 1.35rem; height: 1.55rem; background: var(--oro);
+    clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+  }
+  .nome { font-family: var(--font-titoli); font-weight: 800; font-stretch: 88%; font-size: 1.45rem; letter-spacing: -0.035em; }
+  .menu { display: flex; align-items: center; gap: var(--spazio-5); }
+  .menu ul { display: flex; gap: var(--spazio-1); list-style: none; margin: 0; padding: 0; }
+  .menu ul a {
+    display: block; padding: 0.5rem 0.7rem; border-radius: var(--raggio);
+    font-family: var(--font-titoli); font-weight: 560; font-size: var(--testo-s); text-decoration: none;
+    color: var(--inchiostro-2); transition: color var(--durata) var(--curva), background-color var(--durata) var(--curva);
+  }
+  .menu ul a:hover { color: var(--inchiostro); background: var(--carta-2); }
+  .menu ul a[aria-current='page'] { color: var(--inchiostro); box-shadow: inset 0 -2px 0 var(--oro); border-radius: 0; }
+  .apri-menu {
+    display: none; align-items: center; gap: 0.4rem; min-height: 2.75rem; padding: 0 0.8rem;
+    background: none; border: 1.5px solid var(--linea-forte); border-radius: var(--raggio); cursor: pointer;
+    font-family: var(--font-titoli); font-weight: 600; font-size: var(--testo-s);
+  }
+  .apri-menu :global(svg) { width: 1.2rem; height: 1.2rem; }
+  .apri-menu :global(.i-chiudi), .apri-menu[aria-expanded='true'] :global(.i-apri) { display: none; }
+  .apri-menu[aria-expanded='true'] :global(.i-chiudi) { display: block; }
+
+  @media (max-width: 1023px) {
+    .apri-menu { display: inline-flex; }
+    .menu {
+      display: none; position: absolute; inset: 100% 0 auto 0;
+      flex-direction: column; align-items: stretch; gap: var(--spazio-4);
+      padding: var(--spazio-4) 1.25rem var(--spazio-5);
+      background: var(--carta); border-bottom: 1px solid var(--linea); box-shadow: var(--ombra);
+    }
+    .menu.aperto { display: flex; }
+    .menu ul { flex-direction: column; }
+    .menu ul a { padding: 0.8rem 0.25rem; font-size: var(--testo-l); border-bottom: 1px solid var(--linea); border-radius: 0; }
+    .menu ul a[aria-current='page'] { box-shadow: inset 3px 0 0 var(--oro); padding-left: 0.75rem; }
+    .cta { justify-content: center; }
+  }
+</style>

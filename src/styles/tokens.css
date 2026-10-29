@@ -1,0 +1,51 @@
+:root {
+  --oro: #e6af0b;
+  --oro-chiaro: #f7e3a3;
+  --oro-scuro: #c99606;
+  --carta: #fbf8f2;
+  --carta-2: #f4eee3;
+  --carta-3: #e7dfcf;
+  --inchiostro: #222018;
+  --inchiostro-2: #4a463b;
+  --inchiostro-3: #6b6555;
+  --cielo: #9cc3d5;
+  --cielo-chiaro: #e3eff4;
+  --cielo-scuro: #2c5b70;
+  --terracotta: #c8613f;
+  --terracotta-scuro: #973f22;
+
+  --linea: color-mix(in srgb, var(--inchiostro) 14%, transparent);
+  --linea-forte: color-mix(in srgb, var(--inchiostro) 28%, transparent);
+
+  --font-titoli: 'Archivo Variable', 'Archivo', system-ui, sans-serif;
+  --font-testo: 'Atkinson Hyperlegible Next Variable', 'Atkinson Hyperlegible Next', system-ui, sans-serif;
+
+  --testo-xs: 0.8125rem;
+  --testo-s: 0.9375rem;
+  --testo-m: 1.0625rem;
+  --testo-l: 1.25rem;
+  --titolo-s: clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);
+  --titolo-m: clamp(1.6rem, 1.3rem + 1.4vw, 2.25rem);
+  --titolo-l: clamp(2.2rem, 1.6rem + 2.8vw, 3.75rem);
+
+  --spazio-1: 0.25rem;
+  --spazio-2: 0.5rem;
+  --spazio-3: 0.75rem;
+  --spazio-4: 1rem;
+  --spazio-5: 1.5rem;
+  --spazio-6: 2rem;
+  --spazio-7: 3rem;
+  --spazio-8: 5rem;
+
+  --larghezza: 78rem;
+  --raggio: 6px;
+  --raggio-l: 14px;
+  --ombra: 0 1px 2px rgb(34 32 24 / 0.06), 0 8px 24px -12px rgb(34 32 24 / 0.18);
+  --durata: 220ms;
+  --curva: cubic-bezier(0.16, 1, 0.3, 1);
+  --tratteggio: repeating-linear-gradient(90deg, var(--linea-forte) 0 6px, transparent 6px 11px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root { --durata: 0ms; }
+}
