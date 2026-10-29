@@ -34,7 +34,7 @@ function maiuscolaIniziale(s: string): string {
 }
 
 export function nomeLeggibile(nome: string): string {
-  let testo = nome.replace(/\s+/g, ' ').trim();
+  let testo = nome.replace(/\s+/g, ' ').replace(/\(\s+/g, '(').replace(/\s+\)/g, ')').trim();
   const segnaposti: string[] = [];
   for (const [chiave, valore] of Object.entries(NOMI_PROPRI)) {
     testo = testo.replace(new RegExp(`\\b${chiave}\\b`, 'g'), () => `\u0000${segnaposti.push(valore) - 1}\u0000`);

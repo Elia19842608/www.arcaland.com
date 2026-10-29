@@ -4,9 +4,9 @@ export default defineConfig({
   testDir: 'tests/e2e',
   use: { baseURL: 'http://localhost:4321' },
   webServer: {
-    command: 'npx astro preview --port 4321',
+    command: 'CONTENUTI=fixture npx astro build && npx astro preview --port 4321',
     url: 'http://localhost:4321',
     reuseExistingServer: false,
-    timeout: 60_000,
+    timeout: 180_000,
   },
 });

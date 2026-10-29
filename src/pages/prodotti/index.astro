@@ -1,0 +1,136 @@
+---
+import Base from '../../layouts/Base.astro';
+import ProdottoCard from '../../components/ProdottoCard.astro';
+import Filtri from '../../components/Filtri.astro';
+import Icona from '../../components/Icona.astro';
+import { prodottiAttivi } from '../../lib/catalogo/carica';
+import { ETICHETTE_LINEA, LINEE, type Linea } from '../../lib/catalogo/tipi';
+
+const prodotti = await prodottiAttivi();
+const sottocategorie = Object.fromEntries(
+  LINEE.map((l) => [l, [...new Set(prodotti.filter((p) => p.linea === l).map((p) => p.sottocategoria))].sort((a, b) => a.localeCompare(b, 'it'))]),
+) as Record<Linea, string[]>;
+const totale = prodotti.length;
+---
+<Base titolo="Catalogo prodotti" descrizione={`Catalogo Arcaland: ${totale} prodotti tra giochi, arredo urbano e percorsi sportivi. Filtra per spazio disponibile, età, materiale e altezza di caduta.`}>
+  <div class="contenitore catalogo">
+    <header class="testa">
+      <h1>Catalogo prodotti</h1>
+      <p>Giochi, arredo urbano e percorsi sportivi in legno, acciaio e misti. Parti dallo spazio che hai: ti mostriamo solo quello che ci sta, area di sicurezza compresa.</p>
+    </header>
+
+    <form class="spazio" data-spazio onsubmit="return false">
+      <div class="area" aria-hidden="true"></div>
+      <fieldset>
+        <legend>Ho uno spazio di</legend>
+        <div class="misure">
+          <label><span class="sr-only">Lunghezza dello spazio in metri</span><input type="number" inputmode="decimal" min="0" step="0.1" placeholder="7" data-spazio-l /></label>
+          <span class="per" aria-hidden="true">×</span>
+          <label><span class="sr-only">Larghezza dello spazio in metri</span><input type="number" inputmode="decimal" min="0" step="0.1" placeholder="5" data-spazio-w /></label>
+          <span class="unita">metri</span>
+        </div>
+      </fieldset>
+      <div class="nota">
+        <p>Contiamo l'area di sicurezza prevista dalla EN 1176, non solo l'ingombro del gioco. Il gioco può essere ruotato.</p>
+        <p class="copertura" data-copertura hidden></p>
+      </div>
+    </form>
+
+    <div class="corpo">
+      <Filtri sottocategorie={sottocategorie} />
+
+      <section class="risultati" aria-labelledby="titolo-risultati">
+        <h2 id="titolo-risultati" class="sr-only">Prodotti</h2>
+        <div class="barra">
+          <div class="linee" role="group" aria-label="Linea di prodotto">
+            <button type="button" class="linea" data-linea="" aria-pressed="true">Tutti</button>
+            {LINEE.map((l) => <button type="button" class="linea" data-linea={l} aria-pressed="false">{ETICHETTE_LINEA[l]}</button>)}
+          </div>
+          <div class="conteggio">
+            <p role="status" data-conteggio>{totale} prodotti</p>
+            <button type="button" class="bottone bottone-secondario apri-filtri" aria-expanded="false" aria-controls="pannello-filtri" data-apri-filtri>
+              <Icona nome="filtri" />Filtri<span class="attivi" data-attivi hidden></span>
+            </button>
+          </div>
+        </div>
+
+        <div class="griglia" data-griglia>
+          {prodotti.map((p) => <ProdottoCard prodotto={p} />)}
+        </div>
+
+        <div class="vuoto" data-vuoto hidden>
+          <div class="area-vuota" aria-hidden="true"></div>
+          <h3>Nessun prodotto con questi filtri</h3>
+          <p>Prova ad allargare lo spazio o a togliere qualche filtro. Se cerchi qualcosa di su misura, scrivici: lo progettiamo noi.</p>
+          <div class="azioni-vuoto">
+            <button type="button" class="bottone bottone-primario" data-azzera>Azzera filtri</button>
+            <a class="bottone bottone-secondario" href="/richiesta">Chiedi un progetto su misura</a>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</Base>
+
+<script>
+  import { avviaCatalogo } from '../../scripts/catalogo-client';
+  avviaCatalogo();
+</script>
+
+<style>
+  .catalogo { padding-block: var(--spazio-7) 0; }
+  .testa { max-width: 46rem; margin-bottom: var(--spazio-6); }
+  .testa p { color: var(--inchiostro-2); font-size: var(--testo-l); line-height: 1.5; }
+
+  .spazio {
+    position: relative; display: grid; grid-template-columns: auto 1fr; align-items: center; gap: var(--spazio-3) var(--spazio-6);
+    padding: var(--spazio-5) var(--spazio-6); margin-bottom: var(--spazio-6);
+    background: var(--cielo-chiaro); border-radius: var(--raggio-l); overflow: hidden;
+  }
+  .spazio .area {
+    position: absolute; inset: 10px; border: 1.5px dashed color-mix(in srgb, var(--cielo-scuro) 45%, transparent);
+    border-radius: 9px; pointer-events: none;
+  }
+  .spazio fieldset { border: 0; padding: 0; margin: 0; display: flex; align-items: center; gap: var(--spazio-4); flex-wrap: wrap; }
+  .spazio legend { float: left; font-family: var(--font-titoli); font-weight: 720; font-stretch: 92%; font-size: var(--titolo-s); letter-spacing: -0.015em; padding: 0; margin-right: var(--spazio-4); }
+  .misure { display: flex; align-items: center; gap: var(--spazio-2); }
+  .misure input {
+    width: 5.5rem; min-height: 3rem; padding: 0 0.75rem; text-align: center;
+    font-family: var(--font-titoli); font-weight: 650; font-size: 1.35rem; font-variant-numeric: tabular-nums;
+    border: 1.5px solid var(--cielo-scuro); border-radius: var(--raggio); background: #fff;
+  }
+  .misure input::placeholder { color: color-mix(in srgb, var(--cielo-scuro) 45%, transparent); }
+  .per { font-size: 1.4rem; color: var(--cielo-scuro); }
+  .unita { font-family: var(--font-titoli); font-weight: 600; color: var(--cielo-scuro); }
+  .nota { font-size: var(--testo-s); color: var(--cielo-scuro); max-width: 46ch; justify-self: end; }
+  .nota p { margin: 0; }
+  .copertura { margin-top: var(--spazio-2) !important; font-weight: 700; }
+
+  .corpo { display: grid; grid-template-columns: 15.5rem 1fr; gap: var(--spazio-6); align-items: start; }
+  .corpo > :global(.pannello) { position: sticky; top: 6rem; }
+  .barra { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: var(--spazio-3); margin-bottom: var(--spazio-5); }
+  .linee { display: flex; flex-wrap: wrap; gap: 2px; padding: 3px; background: var(--carta-2); border-radius: calc(var(--raggio) + 3px); }
+  .linea {
+    min-height: 2.5rem; padding: 0 0.95rem; border: 0; border-radius: var(--raggio); background: transparent; cursor: pointer;
+    font-family: var(--font-titoli); font-weight: 600; font-size: var(--testo-s); color: var(--inchiostro-2);
+  }
+  .linea:hover { color: var(--inchiostro); }
+  .linea[aria-pressed='true'] { background: #fff; color: var(--inchiostro); box-shadow: 0 1px 2px rgb(34 32 24 / 0.12); }
+  .conteggio { display: flex; align-items: center; gap: var(--spazio-3); }
+  .conteggio p { margin: 0; font-family: var(--font-titoli); font-weight: 600; font-variant-numeric: tabular-nums; color: var(--inchiostro-2); }
+  .apri-filtri { display: none; }
+  .attivi { display: inline-grid; place-items: center; min-width: 1.4rem; height: 1.4rem; padding: 0 0.3rem; border-radius: 999px; background: var(--oro); font-size: var(--testo-xs); }
+  .griglia { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr)); gap: var(--spazio-4); }
+
+  .vuoto { display: grid; justify-items: center; text-align: center; padding: var(--spazio-7) var(--spazio-5); }
+  .area-vuota { width: 6rem; height: 4.5rem; border: 2px dashed var(--terracotta); border-radius: 6px; margin-bottom: var(--spazio-5); }
+  .vuoto p { color: var(--inchiostro-2); }
+  .azioni-vuoto { display: flex; flex-wrap: wrap; gap: var(--spazio-3); justify-content: center; }
+
+  @media (max-width: 899px) {
+    .corpo { grid-template-columns: 1fr; }
+    .apri-filtri { display: inline-flex; }
+    .spazio { grid-template-columns: 1fr; padding: var(--spazio-5); }
+    .nota { justify-self: start; }
+  }
+</style>

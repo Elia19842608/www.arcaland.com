@@ -26,6 +26,7 @@ describe('nomeLeggibile', () => {
     expect(nomeLeggibile('GAZEBO 4 FALDE 3X3 TELO PVC')).toBe('Gazebo 4 falde 3x3 telo PVC');
     expect(nomeLeggibile('PANCA IN LARICE O RED GRANDIS E CORTEN')).toBe('Panca in larice o Red Grandis e corten');
   });
+  it('pulisce gli spazi dentro le parentesi', () => expect(nomeLeggibile('ALTALENA 1 POSTO ( SLIM LINE)')).toBe('Altalena 1 posto (slim line)'));
   it('maiuscola sul nome della serie', () => expect(nomeLeggibile('PANCHINA SERIE EQUESTRE CON SCHIENALE')).toBe('Panchina serie Equestre con schienale'));
 });
 

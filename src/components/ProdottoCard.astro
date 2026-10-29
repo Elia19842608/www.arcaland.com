@@ -1,0 +1,81 @@
+---
+import Icona from './Icona.astro';
+import { ETICHETTE_MATERIALE, type Prodotto } from '../lib/catalogo/tipi';
+import { versoVoce } from '../lib/catalogo/filtri';
+
+interface Props { prodotto: Prodotto }
+const { prodotto: p } = Astro.props;
+const { foto, foto_reale } = versoVoce(p);
+const href = `/prodotti/${p.slug}`;
+const eta = p.eta_min !== undefined && p.eta_max !== undefined ? `${p.eta_min}–${p.eta_max} anni` : undefined;
+---
+<article class="tessera" data-tessera data-slug={p.slug}>
+  <div class:list={['foto', { 'con-reale': foto_reale }]}>
+    {foto ? (
+      <>
+        <img src={foto} alt="" loading="lazy" decoding="async" width="400" height="300" />
+        {foto_reale && <img class="reale" src={foto_reale} alt="" loading="lazy" decoding="async" width="400" height="300" />}
+      </>
+    ) : (
+      <div class="segnaposto" aria-hidden="true"><span>Immagine in arrivo</span></div>
+    )}
+  </div>
+  <div class="testo">
+    <p class="codice">{p.codice}</p>
+    <h3><a href={href}>{p.nome}</a></h3>
+    <ul class="etichette" aria-label="Caratteristiche">
+      {p.materiale && <li>{ETICHETTE_MATERIALE[p.materiale]}</li>}
+      {eta && <li>{eta}</li>}
+      {p.inclusivo && <li class="inclusivo">Inclusivo</li>}
+      {p.pdf_certificato && <li class="norma"><Icona nome="check" />EN 1176</li>}
+    </ul>
+  </div>
+  <a class="aggiungi" href="/richiesta" aria-label={`Aggiungi ${p.nome} alla richiesta`}><Icona nome="plus" /></a>
+</article>
+
+<style>
+  .tessera {
+    position: relative; display: flex; flex-direction: column;
+    background: #fff; border-radius: var(--raggio-l);
+    box-shadow: 0 0 0 1px var(--linea);
+    transition: box-shadow var(--durata) var(--curva), transform var(--durata) var(--curva);
+  }
+  .tessera:hover { box-shadow: 0 0 0 1px var(--linea-forte), var(--ombra); }
+  .tessera:focus-within { box-shadow: 0 0 0 1px var(--linea-forte), var(--ombra); }
+  .foto {
+    position: relative; aspect-ratio: 4 / 3; overflow: hidden;
+    border-radius: var(--raggio-l) var(--raggio-l) 0 0; background: var(--carta-2);
+  }
+  .foto img { width: 100%; height: 100%; object-fit: contain; padding: 6%; transition: opacity var(--durata) var(--curva); }
+  .foto .reale { position: absolute; inset: 0; object-fit: cover; padding: 0; opacity: 0; }
+  .tessera:hover .con-reale .reale { opacity: 1; }
+  .segnaposto {
+    position: absolute; inset: 12%; display: grid; place-items: center;
+    border: 1.5px dashed var(--cielo-scuro); border-radius: 4px; background: var(--cielo-chiaro);
+    color: var(--cielo-scuro); font-size: var(--testo-xs); font-family: var(--font-titoli); font-weight: 560;
+  }
+  .testo { padding: var(--spazio-4) var(--spazio-4) var(--spazio-5); display: grid; gap: var(--spazio-1); flex: 1; align-content: start; }
+  .codice { margin: 0; font-family: var(--font-titoli); font-size: var(--testo-xs); font-stretch: 85%; letter-spacing: 0.02em; color: var(--inchiostro-3); font-variant-numeric: tabular-nums; }
+  h3 { font-size: 1.05rem; font-weight: 640; line-height: 1.25; margin: 0 0 var(--spazio-2); letter-spacing: -0.01em; }
+  h3 a { text-decoration: none; }
+  h3 a::after { content: ''; position: absolute; inset: 0; border-radius: inherit; }
+  h3 a:focus-visible { outline: none; }
+  h3 a:focus-visible::after { outline: 3px solid var(--cielo-scuro); outline-offset: 2px; border-radius: var(--raggio-l); }
+  .etichette { list-style: none; display: flex; flex-wrap: wrap; gap: 0.35rem; margin: 0; padding: 0; }
+  .etichette li {
+    display: inline-flex; align-items: center; gap: 0.25rem;
+    padding: 0.15rem 0.5rem; border-radius: 999px; background: var(--carta-2);
+    font-size: var(--testo-xs); color: var(--inchiostro-2);
+  }
+  .etichette .inclusivo { background: var(--cielo-chiaro); color: var(--cielo-scuro); }
+  .etichette .norma { background: transparent; box-shadow: inset 0 0 0 1px var(--linea-forte); }
+  .etichette :global(svg) { width: 0.9rem; height: 0.9rem; }
+  .aggiungi {
+    position: absolute; z-index: 1; right: var(--spazio-3); top: var(--spazio-3);
+    display: grid; place-items: center; width: 2.5rem; height: 2.5rem; border-radius: 50%;
+    background: var(--oro); color: var(--inchiostro);
+    transition: background-color var(--durata) var(--curva), transform var(--durata) var(--curva);
+  }
+  .aggiungi:hover { background: var(--oro-scuro); transform: scale(1.06); }
+  .aggiungi :global(svg) { width: 1.25rem; height: 1.25rem; }
+</style>

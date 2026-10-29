@@ -1,0 +1,106 @@
+---
+import Icona from './Icona.astro';
+import { ETICHETTE_LINEA, ETICHETTE_MATERIALE, LINEE, MATERIALI, type Linea } from '../lib/catalogo/tipi';
+
+interface Props { sottocategorie: Record<Linea, string[]> }
+const { sottocategorie } = Astro.props;
+const eta = Array.from({ length: 14 }, (_, i) => i + 1);
+const cadute = [60, 100, 150, 200, 300];
+---
+<div class="velo" data-velo hidden></div>
+<aside id="pannello-filtri" class="pannello" aria-labelledby="titolo-filtri" data-pannello>
+  <div class="intestazione">
+    <h2 id="titolo-filtri">Filtri</h2>
+    <button type="button" class="chiudi" data-chiudi-filtri aria-label="Chiudi i filtri"><Icona nome="x" /></button>
+  </div>
+
+  <fieldset>
+    <legend>Materiale</legend>
+    <div class="scelte">
+      {MATERIALI.map((m) => (
+        <button type="button" class="scelta" data-materiale={m} aria-pressed="false">{ETICHETTE_MATERIALE[m]}</button>
+      ))}
+    </div>
+  </fieldset>
+
+  <label class="campo">
+    <span>Tipologia</span>
+    <select data-sottocategoria>
+      <option value="">Tutte le tipologie</option>
+      {LINEE.map((l) => (
+        <optgroup label={ETICHETTE_LINEA[l]} data-linea={l}>
+          {sottocategorie[l].map((s) => <option value={s}>{s}</option>)}
+        </optgroup>
+      ))}
+    </select>
+  </label>
+
+  <label class="campo">
+    <span>Età del bambino</span>
+    <select data-eta>
+      <option value="">Qualsiasi età</option>
+      {eta.map((n) => <option value={n}>{n} {n === 1 ? 'anno' : 'anni'}</option>)}
+    </select>
+  </label>
+
+  <label class="campo">
+    <span>Altezza di caduta massima</span>
+    <select data-caduta>
+      <option value="">Qualsiasi altezza</option>
+      {cadute.map((c) => <option value={c}>fino a {c} cm</option>)}
+    </select>
+  </label>
+
+  <label class="spunta">
+    <input type="checkbox" data-inclusivo />
+    <span>Solo giochi inclusivi</span>
+  </label>
+
+  <div class="azioni">
+    <button type="button" class="bottone bottone-secondario" data-azzera>Azzera filtri</button>
+    <button type="button" class="bottone bottone-primario mostra" data-chiudi-filtri data-mostra>Mostra i prodotti</button>
+  </div>
+</aside>
+
+<style>
+  .pannello { display: grid; gap: var(--spazio-5); align-content: start; }
+  .intestazione { display: flex; justify-content: space-between; align-items: center; }
+  .intestazione h2 { font-size: var(--titolo-s); margin: 0; }
+  .chiudi, .mostra { display: none; }
+  fieldset { border: 0; margin: 0; padding: 0; }
+  legend, .campo > span { display: block; margin-bottom: var(--spazio-2); font-family: var(--font-titoli); font-weight: 650; font-size: var(--testo-s); }
+  .scelte { display: flex; flex-wrap: wrap; gap: var(--spazio-2); }
+  .scelta {
+    min-height: 2.5rem; padding: 0 0.95rem; border-radius: 999px; cursor: pointer;
+    background: #fff; border: 1.5px solid var(--linea-forte); font-size: var(--testo-s);
+    transition: background-color var(--durata) var(--curva), border-color var(--durata) var(--curva);
+  }
+  .scelta:hover { border-color: var(--inchiostro); }
+  .scelta[aria-pressed='true'] { background: var(--inchiostro); border-color: var(--inchiostro); color: var(--carta); }
+  select {
+    width: 100%; min-height: 2.75rem; padding: 0 2.25rem 0 0.75rem;
+    border: 1.5px solid var(--linea-forte); border-radius: var(--raggio); background: #fff;
+    appearance: none; cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23222018' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 0.7rem center; background-size: 1rem;
+  }
+  select:hover { border-color: var(--inchiostro); }
+  .spunta { display: flex; align-items: center; gap: var(--spazio-2); cursor: pointer; font-size: var(--testo-s); }
+  .spunta input { width: 1.2rem; height: 1.2rem; accent-color: var(--inchiostro); margin: 0; }
+  .azioni { display: grid; gap: var(--spazio-2); }
+  .velo { position: fixed; inset: 0; z-index: 30; background: rgb(34 32 24 / 0.4); }
+
+  @media (max-width: 899px) {
+    .pannello {
+      position: fixed; z-index: 31; inset: auto 0 0 0; max-height: 88dvh; overflow: auto;
+      padding: var(--spazio-5) 1.25rem calc(var(--spazio-5) + env(safe-area-inset-bottom));
+      background: var(--carta); border-radius: var(--raggio-l) var(--raggio-l) 0 0; box-shadow: 0 -12px 40px rgb(34 32 24 / 0.2);
+    }
+    .pannello:not(.aperto) { display: none; }
+    .chiudi { display: grid; place-items: center; width: 2.75rem; height: 2.75rem; background: none; border: 0; cursor: pointer; }
+    .chiudi :global(svg) { width: 1.4rem; height: 1.4rem; }
+    .mostra { display: inline-flex; justify-content: center; }
+    .azioni { grid-template-columns: 1fr 1.4fr; position: sticky; bottom: 0; }
+  }
+  @media (min-width: 900px) { .velo { display: none; } }
+</style>
