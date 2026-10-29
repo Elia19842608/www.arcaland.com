@@ -1,0 +1,69 @@
+---
+interface Props { render: string[]; reali: string[]; nome: string }
+const { render, reali, nome } = Astro.props;
+const immagini = [
+  ...render.map((src) => ({ src, tipo: 'Render' })),
+  ...reali.map((src) => ({ src, tipo: 'Foto reale' })),
+];
+const prima = immagini[0];
+---
+<section class="galleria" aria-label="Immagini" data-galleria>
+  {prima ? (
+    <>
+      <figure class="principale">
+        <img src={prima.src} alt={`${nome}, ${prima.tipo.toLowerCase()}`} width="800" height="600" data-principale />
+        <figcaption data-didascalia>{prima.tipo}</figcaption>
+      </figure>
+      {immagini.length > 1 && (
+        <ul class="miniature">
+          {immagini.map((img, i) => (
+            <li>
+              <button type="button" aria-pressed={i === 0 ? 'true' : 'false'} data-src={img.src} data-tipo={img.tipo} aria-label={`Mostra ${img.tipo.toLowerCase()} ${i + 1}`}>
+                <img src={img.src} alt="" width="120" height="90" loading="lazy" />
+                <span>{img.tipo}</span>
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+    </>
+  ) : (
+    <div class="segnaposto"><span>Immagine in arrivo</span></div>
+  )}
+</section>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-galleria]').forEach((g) => {
+    const img = g.querySelector<HTMLImageElement>('[data-principale]');
+    const didascalia = g.querySelector<HTMLElement>('[data-didascalia]');
+    const nome = img?.alt.split(',')[0] ?? '';
+    g.querySelectorAll<HTMLButtonElement>('button[data-src]').forEach((b) => b.addEventListener('click', () => {
+      if (!img || !didascalia) return;
+      img.src = b.dataset.src!;
+      img.alt = `${nome}, ${b.dataset.tipo!.toLowerCase()}`;
+      didascalia.textContent = b.dataset.tipo!;
+      g.querySelectorAll('button[data-src]').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+    }));
+  });
+</script>
+
+<style>
+  .galleria { display: grid; gap: var(--spazio-3); }
+  .principale { position: relative; margin: 0; aspect-ratio: 4 / 3; background: var(--carta-2); border-radius: var(--raggio-l); overflow: hidden; }
+  .principale img { width: 100%; height: 100%; object-fit: contain; padding: 4%; }
+  figcaption, .miniature span {
+    position: absolute; left: var(--spazio-3); top: var(--spazio-3);
+    padding: 0.2rem 0.6rem; border-radius: 999px; background: rgb(255 255 255 / 0.9);
+    font-family: var(--font-titoli); font-weight: 650; font-size: var(--testo-xs);
+  }
+  .miniature { display: flex; gap: var(--spazio-2); list-style: none; margin: 0; padding: 0; overflow-x: auto; }
+  .miniature button { position: relative; width: 6.5rem; padding: 0; border: 2px solid transparent; border-radius: var(--raggio); background: var(--carta-2); cursor: pointer; overflow: hidden; }
+  .miniature button[aria-pressed='true'] { border-color: var(--inchiostro); }
+  .miniature img { aspect-ratio: 4 / 3; object-fit: contain; width: 100%; }
+  .miniature span { position: static; display: block; border-radius: 0; background: none; padding: 0.15rem; font-size: 0.7rem; }
+  .segnaposto {
+    aspect-ratio: 4 / 3; display: grid; place-items: center; border-radius: var(--raggio-l);
+    background: var(--cielo-chiaro); outline: 1.5px dashed var(--cielo-scuro); outline-offset: -14px;
+    color: var(--cielo-scuro); font-family: var(--font-titoli); font-weight: 600;
+  }
+</style>

@@ -42,7 +42,7 @@ export function nomeLeggibile(nome: string): string {
   const parole = testo.split(' ');
   const risultato = parole.map((p, i) => {
     if (p.includes('\u0000')) return p;
-    if (SIGLE.has(p)) return p;
+    if (SIGLE.has(p) || /^"[A-Z0-9]"$/.test(p)) return p;
     const minuscola = p.toLocaleLowerCase('it');
     if (i > 0 && DOPO_SERIE.has(parole[i - 1]) && /^[A-ZÀ-Ù]/.test(p)) return maiuscolaIniziale(minuscola);
     return minuscola;

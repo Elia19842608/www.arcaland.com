@@ -1,0 +1,172 @@
+---
+import Base from '../../layouts/Base.astro';
+import Galleria from '../../components/Galleria.astro';
+import PiantaSicurezza from '../../components/PiantaSicurezza.astro';
+import ProdottoCard from '../../components/ProdottoCard.astro';
+import Icona from '../../components/Icona.astro';
+import { prodottiAttivi } from '../../lib/catalogo/carica';
+import { metri } from '../../lib/catalogo/pianta';
+import { ETICHETTE_LINEA, ETICHETTE_MATERIALE, type Prodotto } from '../../lib/catalogo/tipi';
+
+export async function getStaticPaths() {
+  const prodotti = await prodottiAttivi();
+  return prodotti.map((p) => ({
+    params: { slug: p.slug },
+    props: { prodotto: p, simili: prodotti.filter((x) => x.sottocategoria === p.sottocategoria && x.slug !== p.slug).slice(0, 4) },
+  }));
+}
+
+interface Props { prodotto: Prodotto; simili: Prodotto[] }
+const { prodotto: p, simili } = Astro.props;
+
+const misura = (m?: { lunghezza_cm: number; larghezza_cm: number; altezza_cm?: number }) =>
+  m ? [m.lunghezza_cm, m.larghezza_cm, m.altezza_cm].filter((x) => x !== undefined).map((x) => metri(x!).replace(' m', '')).join(' × ') + ' m' : undefined;
+
+const righe: [string, string | undefined][] = [
+  ['Codice', p.codice],
+  ['Linea', ETICHETTE_LINEA[p.linea]],
+  ['Tipologia', p.sottocategoria],
+  ['Materiale', p.materiale && ETICHETTE_MATERIALE[p.materiale]],
+  ['Età consigliata', p.eta_min !== undefined && p.eta_max !== undefined ? `${p.eta_min}–${p.eta_max} anni` : undefined],
+  ['Altezza di caduta', p.altezza_caduta_cm !== undefined ? metri(p.altezza_caduta_cm) : undefined],
+  ['Ingombro (L × P × H)', misura(p.ingombro)],
+  ['Area di sicurezza', misura(p.area_sicurezza)],
+  ['Utenti contemporanei', p.utenti_max !== undefined ? String(p.utenti_max) : undefined],
+  ['Gioco inclusivo', p.inclusivo ? 'Sì' : undefined],
+];
+const datiVisibili = righe.filter(([, v]) => v !== undefined) as [string, string][];
+const documenti = [
+  { href: p.pdf_scheda, etichetta: 'Scheda tecnica' },
+  { href: p.pdf_certificato, etichetta: 'Certificato EN 1176' },
+  { href: p.pdf_istruzioni, etichetta: 'Istruzioni di posa' },
+].filter((d) => d.href);
+
+const descrizioneMeta = `${p.nome} (codice ${p.codice}): ${p.sottocategoria.toLowerCase()} Arcaland${p.materiale ? ` in ${ETICHETTE_MATERIALE[p.materiale].toLowerCase()}` : ''}. Dati tecnici, area di sicurezza e documenti per la richiesta di preventivo.`;
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Product',
+  name: p.nome,
+  sku: p.codice,
+  brand: { '@type': 'Brand', name: 'Arcaland' },
+  category: `${ETICHETTE_LINEA[p.linea]} / ${p.sottocategoria}`,
+  ...(p.descrizione ? { description: p.descrizione } : {}),
+  ...(p.foto_render[0] || p.foto_reali[0] ? { image: new URL(p.foto_render[0] ?? p.foto_reali[0], Astro.site).href } : {}),
+};
+---
+<Base titolo={p.nome} descrizione={descrizioneMeta}>
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  <article class="contenitore scheda">
+    <nav class="briciole" aria-label="Percorso">
+      <ol>
+        <li><a href="/prodotti">Catalogo</a></li>
+        <li><a href={`/prodotti?linea=${p.linea}`}>{ETICHETTE_LINEA[p.linea]}</a></li>
+        <li><a href={`/prodotti?linea=${p.linea}&sottocategoria=${encodeURIComponent(p.sottocategoria)}`}>{p.sottocategoria}</a></li>
+      </ol>
+    </nav>
+
+    <div class="apertura">
+      <Galleria render={p.foto_render} reali={p.foto_reali} nome={p.nome} />
+      <div class="sintesi">
+        <p class="codice">{p.codice}</p>
+        <h1>{p.nome}</h1>
+        {p.descrizione && <p class="descrizione">{p.descrizione}</p>}
+        <ul class="fatti">
+          {p.materiale && <li><span>Materiale</span>{ETICHETTE_MATERIALE[p.materiale]}</li>}
+          {p.eta_min !== undefined && p.eta_max !== undefined && <li><span>Età</span>{p.eta_min}–{p.eta_max} anni</li>}
+          {p.altezza_caduta_cm !== undefined && <li><span>Caduta</span>{metri(p.altezza_caduta_cm)}</li>}
+          {p.area_sicurezza && <li><span>Area</span>{misura(p.area_sicurezza)}</li>}
+        </ul>
+        <div class="azioni">
+          <a class="bottone bottone-primario" href="/richiesta"><Icona nome="plus" />Aggiungi alla richiesta</a>
+          {p.pdf_scheda && <a class="bottone bottone-secondario" href={p.pdf_scheda} download><Icona nome="download" />Scheda tecnica</a>}
+        </div>
+        {p.pdf_certificato && <p class="certificato"><Icona nome="check" />Conforme alla norma EN 1176, certificato scaricabile qui sotto.</p>}
+      </div>
+    </div>
+
+    {p.area_sicurezza && (
+      <section class="blocco area-blocco" aria-labelledby="titolo-area">
+        <div>
+          <h2 id="titolo-area">Area di sicurezza</h2>
+          <p>Lo spazio libero che la EN 1176 richiede intorno al gioco, da coprire con pavimentazione antitrauma dove serve. È la misura da confrontare con l'area che hai a disposizione.</p>
+        </div>
+        <PiantaSicurezza area={p.area_sicurezza} ingombro={p.ingombro} />
+      </section>
+    )}
+
+    <div class="dettagli">
+      <section class="blocco" aria-labelledby="titolo-dati">
+        <h2 id="titolo-dati">Dati tecnici</h2>
+        <table aria-labelledby="titolo-dati">
+          <tbody>
+            {datiVisibili.map(([k, v]) => <tr><th scope="row">{k}</th><td>{v}</td></tr>)}
+          </tbody>
+        </table>
+      </section>
+
+      {documenti.length > 0 && (
+        <section class="blocco" aria-labelledby="titolo-documenti">
+          <h2 id="titolo-documenti">Documenti</h2>
+          <ul class="documenti">
+            {documenti.map((d) => (
+              <li><a href={d.href} download><Icona nome="file" /><span>{d.etichetta}</span><small>PDF</small><Icona nome="download" /></a></li>
+            ))}
+          </ul>
+        </section>
+      )}
+    </div>
+
+    {simili.length > 0 && (
+      <section class="blocco simili" aria-labelledby="titolo-simili">
+        <h2 id="titolo-simili">Della stessa tipologia</h2>
+        <div class="griglia">{simili.map((s) => <ProdottoCard prodotto={s} />)}</div>
+      </section>
+    )}
+  </article>
+</Base>
+
+<style>
+  .scheda { padding-block: var(--spazio-5) 0; }
+  .briciole ol { display: flex; flex-wrap: wrap; gap: var(--spazio-2); list-style: none; padding: 0; margin: 0 0 var(--spazio-5); font-size: var(--testo-s); color: var(--inchiostro-3); }
+  .briciole li + li::before { content: '/'; margin-right: var(--spazio-2); color: var(--linea-forte); }
+  .briciole a { text-decoration: none; color: var(--inchiostro-2); }
+  .briciole a:hover { text-decoration: underline; text-decoration-color: var(--oro); }
+
+  .apertura { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: var(--spazio-7); align-items: start; }
+  .codice { margin: 0 0 var(--spazio-2); font-family: var(--font-titoli); font-stretch: 85%; font-size: var(--testo-s); letter-spacing: 0.03em; color: var(--inchiostro-3); font-variant-numeric: tabular-nums; }
+  h1 { font-size: clamp(2rem, 1.5rem + 2.2vw, 3.1rem); }
+  .descrizione { color: var(--inchiostro-2); }
+  .fatti { display: grid; grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr)); gap: 1px; list-style: none; padding: 0; margin: var(--spazio-5) 0; background: var(--linea); border-block: 1px solid var(--linea); }
+  .fatti li { display: grid; gap: 0.1rem; padding: var(--spazio-3); background: var(--carta); font-family: var(--font-titoli); font-weight: 650; font-size: var(--testo-l); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .fatti span { font-family: var(--font-testo); font-weight: 400; font-size: var(--testo-xs); color: var(--inchiostro-3); }
+  .azioni { display: flex; flex-wrap: wrap; gap: var(--spazio-3); margin-top: var(--spazio-5); }
+  .certificato { display: flex; align-items: center; gap: var(--spazio-2); margin-top: var(--spazio-4); font-size: var(--testo-s); color: var(--cielo-scuro); }
+  .certificato :global(svg) { width: 1.2rem; height: 1.2rem; flex: none; }
+
+  .blocco { margin-top: var(--spazio-8); }
+  .area-blocco { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr); gap: var(--spazio-7); align-items: center; padding: var(--spazio-6); background: #fff; border-radius: var(--raggio-l); box-shadow: 0 0 0 1px var(--linea); }
+  .area-blocco p { color: var(--inchiostro-2); }
+  .dettagli { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: var(--spazio-7); align-items: start; }
+  .dettagli .blocco { margin-top: var(--spazio-8); }
+  table { width: 100%; border-collapse: collapse; }
+  th, td { text-align: left; padding: var(--spazio-3) 0; border-bottom: 1px solid var(--linea); vertical-align: top; }
+  th { font-weight: 400; color: var(--inchiostro-2); width: 45%; padding-right: var(--spazio-4); }
+  td { font-family: var(--font-titoli); font-weight: 600; }
+  .documenti { list-style: none; padding: 0; margin: 0; display: grid; gap: var(--spazio-2); }
+  .documenti a {
+    display: grid; grid-template-columns: auto 1fr auto auto; align-items: center; gap: var(--spazio-3);
+    padding: var(--spazio-3) var(--spazio-4); border-radius: var(--raggio); background: #fff; box-shadow: 0 0 0 1px var(--linea);
+    text-decoration: none; font-family: var(--font-titoli); font-weight: 600;
+    transition: box-shadow var(--durata) var(--curva);
+  }
+  .documenti a:hover { box-shadow: 0 0 0 1px var(--inchiostro); }
+  .documenti small { font-weight: 500; color: var(--inchiostro-3); }
+  .documenti :global(svg) { width: 1.2rem; height: 1.2rem; }
+  .simili .griglia { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr)); gap: var(--spazio-4); }
+
+  @media (max-width: 899px) {
+    .apertura, .area-blocco, .dettagli { grid-template-columns: 1fr; gap: var(--spazio-5); }
+    .area-blocco { padding: var(--spazio-5); }
+    .blocco, .dettagli .blocco { margin-top: var(--spazio-7); }
+  }
+</style>

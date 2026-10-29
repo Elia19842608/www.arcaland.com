@@ -27,6 +27,7 @@ describe('nomeLeggibile', () => {
     expect(nomeLeggibile('PANCA IN LARICE O RED GRANDIS E CORTEN')).toBe('Panca in larice o Red Grandis e corten');
   });
   it('pulisce gli spazi dentro le parentesi', () => expect(nomeLeggibile('ALTALENA 1 POSTO ( SLIM LINE)')).toBe('Altalena 1 posto (slim line)'));
+  it('conserva le lettere singole tra virgolette', () => expect(nomeLeggibile('HEXAPLAY COMPOSIZIONE 2 TORRI "A"')).toBe('Hexaplay composizione 2 torri "A"'));
   it('maiuscola sul nome della serie', () => expect(nomeLeggibile('PANCHINA SERIE EQUESTRE CON SCHIENALE')).toBe('Panchina serie Equestre con schienale'));
 });
 

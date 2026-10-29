@@ -1,0 +1,46 @@
+---
+import { calcolaPianta, metri } from '../lib/catalogo/pianta';
+import type { Misure } from '../lib/catalogo/tipi';
+
+interface Props { area: Misure; ingombro?: Misure }
+const { area, ingombro } = Astro.props;
+const p = calcolaPianta(area, ingombro);
+const titolo = `Area di sicurezza ${metri(area.lunghezza_cm).replace(' m', '')} × ${metri(area.larghezza_cm)}${ingombro ? `, ingombro del gioco ${metri(ingombro.lunghezza_cm).replace(' m', '')} × ${metri(ingombro.larghezza_cm)}` : ''}`;
+const fs = Math.max(30, Math.round(Math.max(area.lunghezza_cm, area.larghezza_cm) / 16));
+---
+<figure class="pianta">
+  <svg viewBox={p.viewBox} role="img" aria-labelledby="titolo-pianta">
+    <title id="titolo-pianta">{titolo}</title>
+    <rect class="area" x={p.area.x} y={p.area.y} width={p.area.w} height={p.area.h} rx="6" />
+    {p.ingombro && <rect class="ingombro" x={p.ingombro.x} y={p.ingombro.y} width={p.ingombro.w} height={p.ingombro.h} rx="3" />}
+    <line class="quota" x1={p.area.x} y1={p.area.y - 40} x2={p.area.x + p.area.w} y2={p.area.y - 40} />
+    <line class="quota" x1={p.area.x - 40} y1={p.area.y} x2={p.area.x - 40} y2={p.area.y + p.area.h} />
+    {p.quote.map((q, i) => (
+      <text
+        class:list={['testo-quota', { interna: i > 1 }]}
+        x={q.x} y={q.y}
+        font-size={fs}
+        transform={q.verticale ? `rotate(-90 ${q.x} ${q.y})` : undefined}
+        dy={q.verticale ? 0 : -8}
+        text-anchor="middle">{q.testo}</text>
+    ))}
+  </svg>
+  <figcaption>
+    <span class="chiave area-k"></span>Area di sicurezza
+    {ingombro && <><span class="chiave ingombro-k"></span>Ingombro del gioco</>}
+  </figcaption>
+</figure>
+
+<style>
+  .pianta { margin: 0; }
+  svg { width: 100%; height: auto; max-height: 26rem; }
+  .area { fill: var(--cielo-chiaro); stroke: var(--cielo-scuro); stroke-width: 3; stroke-dasharray: 14 9; vector-effect: non-scaling-stroke; }
+  .ingombro { fill: color-mix(in srgb, var(--inchiostro) 14%, transparent); stroke: var(--inchiostro); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
+  .quota { stroke: var(--inchiostro-3); stroke-width: 1; vector-effect: non-scaling-stroke; marker-start: none; }
+  .testo-quota { font-family: var(--font-titoli); font-weight: 650; fill: var(--inchiostro-2); font-variant-numeric: tabular-nums; }
+  .testo-quota.interna { fill: var(--inchiostro); }
+  figcaption { display: flex; flex-wrap: wrap; align-items: center; gap: var(--spazio-2) var(--spazio-4); margin-top: var(--spazio-3); font-size: var(--testo-s); color: var(--inchiostro-2); }
+  .chiave { display: inline-block; width: 1.4rem; height: 0.9rem; border-radius: 2px; margin-right: -0.5rem; vertical-align: middle; }
+  .area-k { background: var(--cielo-chiaro); border: 1.5px dashed var(--cielo-scuro); }
+  .ingombro-k { background: color-mix(in srgb, var(--inchiostro) 14%, transparent); border: 1px solid var(--inchiostro); margin-left: var(--spazio-3); }
+</style>
