@@ -1,6 +1,8 @@
 ---
 import Icona from './Icona.astro';
 import { sito } from '../lib/sito';
+import { emailRichieste } from '../lib/catalogo/carica';
+const email = await emailRichieste();
 const anno = new Date().getFullYear();
 ---
 <footer class="piede">
@@ -21,7 +23,7 @@ const anno = new Date().getFullYear();
     <div>
       <h2>Contatti</h2>
       <ul>
-        <li><Icona nome="mail" /><a href={`mailto:${sito.email}`}>{sito.email}</a></li>
+        <li><Icona nome="mail" /><a href={`mailto:${email}`}>{email}</a></li>
         <li><Icona nome="clipboard" /><a href="/richiesta">Richiedi un preventivo</a></li>
       </ul>
     </div>

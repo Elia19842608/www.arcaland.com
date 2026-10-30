@@ -1,0 +1,96 @@
+backend:
+  name: github
+  repo: Elia19842608/arcaland-sito
+  branch: main
+  commit_messages:
+    create: 'contenuti: crea {{collection}} "{{slug}}"'
+    update: 'contenuti: aggiorna {{collection}} "{{slug}}"'
+    delete: 'contenuti: elimina {{collection}} "{{slug}}"'
+    uploadMedia: 'contenuti: carica "{{path}}"'
+    deleteMedia: 'contenuti: elimina "{{path}}"'
+
+site_url: https://www.arcaland.com
+display_url: https://www.arcaland.com
+logo_url: /favicon.svg
+locale: it
+media_folder: public/media/prodotti
+public_folder: /media/prodotti
+
+collections:
+  - name: prodotti
+    label: Prodotti
+    label_singular: Prodotto
+    description: Catalogo del sito. I prezzi non vanno mai inseriti qui.
+    folder: src/content/prodotti
+    extension: md
+    format: frontmatter
+    create: true
+    slug: '{{fields.slug}}'
+    identifier_field: nome
+    summary: '{{codice}} · {{nome}}'
+    sortable_fields: [nome, codice, sottocategoria]
+    view_filters:
+      - { label: Giochi, field: linea, pattern: giochi }
+      - { label: Arredo urbano, field: linea, pattern: arredo-urbano }
+      - { label: Percorsi sportivi, field: linea, pattern: percorsi-sportivi }
+      - { label: Non pubblicati, field: attivo, pattern: false }
+    view_groups:
+      - { label: Tipologia, field: sottocategoria }
+    fields:
+      - { name: codice, label: Codice articolo, widget: string }
+      - { name: slug, label: Indirizzo pagina, widget: string, hint: 'Solo minuscole, numeri e trattini. Di solito il codice: 9.HP150.00 diventa 9-hp150-00.', pattern: ['^[a-z0-9-]+$', 'Solo minuscole, numeri e trattini'] }
+      - { name: nome, label: Nome, widget: string }
+      - name: linea
+        label: Linea
+        widget: select
+        options:
+          - { label: Giochi, value: giochi }
+          - { label: Arredo urbano, value: arredo-urbano }
+          - { label: Percorsi sportivi, value: percorsi-sportivi }
+      - { name: sottocategoria, label: Tipologia, widget: string, hint: 'Per esempio: Altalene e dondoli, Panchine, Hexaplay.' }
+      - name: materiale
+        label: Materiale
+        widget: select
+        required: false
+        options:
+          - { label: Legno, value: legno }
+          - { label: Acciaio, value: acciaio }
+          - { label: Misto, value: misto }
+      - { name: eta_min, label: Età minima (anni), widget: number, value_type: int, required: false }
+      - { name: eta_max, label: Età massima (anni), widget: number, value_type: int, required: false }
+      - { name: altezza_caduta_cm, label: Altezza di caduta (cm), widget: number, value_type: int, required: false }
+      - name: ingombro
+        label: Ingombro del gioco (cm)
+        widget: object
+        required: false
+        fields:
+          - { name: lunghezza_cm, label: Lunghezza, widget: number, value_type: int }
+          - { name: larghezza_cm, label: Larghezza, widget: number, value_type: int }
+          - { name: altezza_cm, label: Altezza, widget: number, value_type: int, required: false }
+      - name: area_sicurezza
+        label: Area di sicurezza EN 1176 (cm)
+        widget: object
+        required: false
+        hint: Serve per il filtro "Ho uno spazio di" e per la pianta nella scheda.
+        fields:
+          - { name: lunghezza_cm, label: Lunghezza, widget: number, value_type: int }
+          - { name: larghezza_cm, label: Larghezza, widget: number, value_type: int }
+      - { name: utenti_max, label: Utenti contemporanei, widget: number, value_type: int, required: false }
+      - { name: inclusivo, label: Gioco inclusivo, widget: boolean, default: false }
+      - { name: descrizione, label: Descrizione, widget: text, required: false }
+      - { name: foto_render, label: Render (foto scontornate), widget: image, multiple: true, required: false, default: [] }
+      - { name: foto_reali, label: Foto reali nel parco, widget: image, multiple: true, required: false, default: [] }
+      - { name: pdf_scheda, label: Scheda tecnica (PDF), widget: file, required: false }
+      - { name: pdf_certificato, label: Certificato EN 1176 (PDF), widget: file, required: false }
+      - { name: pdf_istruzioni, label: Istruzioni di posa (PDF), widget: file, required: false }
+      - { name: attivo, label: Pubblicato sul sito, widget: boolean, default: true }
+
+  - name: impostazioni
+    label: Impostazioni
+    files:
+      - name: sito
+        label: Impostazioni del sito
+        file: src/content/impostazioni/sito.yaml
+        format: yaml
+        fields:
+          - { name: email_richieste, label: Email che riceve le richieste di preventivo, widget: string }

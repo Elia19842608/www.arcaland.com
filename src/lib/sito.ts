@@ -1,6 +1,5 @@
 export const sito = {
   nome: 'Arcaland',
-  email: 'elia.ferretti@zennarolegnami.com',
   sedi: [
     { citta: 'Reggio Emilia', ruolo: 'Sede commerciale' },
     { citta: 'Porto Viro', ruolo: 'Produzione' },
