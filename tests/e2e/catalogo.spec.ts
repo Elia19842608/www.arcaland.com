@@ -79,3 +79,9 @@ test('con lo spazio attivo dice per quanti prodotti c’è l’area di sicurezza
   await page.getByRole('button', { name: 'Azzera filtri' }).first().click();
   await expect(page.getByText(/Area di sicurezza indicata per/)).toBeHidden();
 });
+
+test('le opzioni della tipologia non ricevono attributi dei pulsanti', async ({ page }) => {
+  await page.goto('/prodotti');
+  await page.getByRole('button', { name: 'Giochi', exact: true }).click();
+  await expect(page.locator('optgroup[aria-pressed]')).toHaveCount(0);
+});

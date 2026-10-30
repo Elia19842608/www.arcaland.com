@@ -44,7 +44,7 @@ export async function avviaCatalogo(): Promise<void> {
   }
 
   function sincronizzaControlli() {
-    $$<HTMLButtonElement>('[data-linea]').forEach((b) => b.setAttribute('aria-pressed', String((b.dataset.linea || undefined) === filtri.linea)));
+    $$<HTMLButtonElement>('button[data-linea]').forEach((b) => b.setAttribute('aria-pressed', String((b.dataset.linea || undefined) === filtri.linea)));
     $$<HTMLButtonElement>('[data-materiale]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.materiale === filtri.materiale)));
     $$<HTMLOptGroupElement>('optgroup[data-linea]').forEach((g) => { g.hidden = !!filtri.linea && g.dataset.linea !== filtri.linea; });
     if (selSotto) selSotto.value = filtri.sottocategoria ?? '';
@@ -87,7 +87,7 @@ export async function avviaCatalogo(): Promise<void> {
     applica();
   }
 
-  $$<HTMLButtonElement>('[data-linea]').forEach((b) => b.addEventListener('click', () => {
+  $$<HTMLButtonElement>('button[data-linea]').forEach((b) => b.addEventListener('click', () => {
     const linea = (b.dataset.linea || undefined) as Linea | undefined;
     const sotto = filtri.sottocategoria && linea && voci.some((v) => v.linea === linea && v.sottocategoria === filtri.sottocategoria) ? filtri.sottocategoria : undefined;
     imposta({ linea, sottocategoria: sotto });
