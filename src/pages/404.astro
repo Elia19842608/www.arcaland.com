@@ -1,0 +1,23 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base titolo="Pagina non trovata">
+  <section class="contenitore vuota">
+    <div class="area" aria-hidden="true"><span>?</span></div>
+    <h1>Questa pagina non c’è ancora</h1>
+    <p>Il nuovo sito Arcaland è in costruzione e alcune sezioni arrivano nelle prossime settimane. Intanto il catalogo è completo: trovi tutti i giochi, gli arredi e i percorsi sportivi con i dati tecnici.</p>
+    <div class="azioni">
+      <a class="bottone bottone-primario" href="/prodotti">Vai al catalogo</a>
+      <a class="bottone bottone-secondario" href="/richiesta">Richiedi un preventivo</a>
+    </div>
+  </section>
+</Base>
+<style>
+  .vuota { padding-block: var(--spazio-8); }
+  .area {
+    display: grid; place-items: center; width: 7rem; height: 5rem; margin-bottom: var(--spazio-6);
+    border: 2px dashed var(--cielo-scuro); border-radius: 8px; background: var(--cielo-chiaro);
+    font-family: var(--font-titoli); font-weight: 800; font-size: 2rem; color: var(--cielo-scuro);
+  }
+  .azioni { display: flex; flex-wrap: wrap; gap: var(--spazio-3); margin-top: var(--spazio-5); }
+</style>

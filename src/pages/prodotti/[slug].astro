@@ -6,6 +6,7 @@ import ProdottoCard from '../../components/ProdottoCard.astro';
 import Icona from '../../components/Icona.astro';
 import { prodottiAttivi } from '../../lib/catalogo/carica';
 import { metri } from '../../lib/catalogo/pianta';
+import { jsonPerScript } from '../../lib/json-ld';
 import { ETICHETTE_LINEA, ETICHETTE_MATERIALE, type Prodotto } from '../../lib/catalogo/tipi';
 
 export async function getStaticPaths() {
@@ -54,7 +55,7 @@ const jsonLd = {
 };
 ---
 <Base titolo={p.nome} descrizione={descrizioneMeta}>
-  <script slot="head" type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  <script slot="head" type="application/ld+json" set:html={jsonPerScript(jsonLd)} />
   <article class="contenitore scheda">
     <nav class="briciole" aria-label="Percorso">
       <ol>
