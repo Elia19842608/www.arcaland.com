@@ -85,3 +85,19 @@ test('le opzioni della tipologia non ricevono attributi dei pulsanti', async ({ 
   await page.getByRole('button', { name: 'Giochi', exact: true }).click();
   await expect(page.locator('optgroup[aria-pressed]')).toHaveCount(0);
 });
+
+test('su mobile il pannello filtri si apre ancorato in basso', async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 800 });
+  await page.goto('/prodotti');
+  await page.getByRole('button', { name: /^Filtri/ }).click();
+  const box = await page.locator('[data-pannello]').boundingBox();
+  expect(box).not.toBeNull();
+  expect(Math.round(box!.y + box!.height)).toBe(800);
+  expect(Math.round(box!.x)).toBe(0);
+});
+
+test('le misure dello spazio hanno etichette visibili', async ({ page }) => {
+  await page.goto('/prodotti');
+  await expect(page.getByText('Lunghezza', { exact: true })).toBeVisible();
+  await expect(page.getByText('Larghezza', { exact: true })).toBeVisible();
+});

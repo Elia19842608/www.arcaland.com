@@ -24,9 +24,9 @@ const totale = prodotti.length;
       <fieldset>
         <legend>Ho uno spazio di</legend>
         <div class="misure">
-          <label><span class="sr-only">Lunghezza dello spazio in metri</span><input type="number" inputmode="decimal" min="0" step="0.1" placeholder="7" data-spazio-l /></label>
+          <label class="misura"><span aria-hidden="true">Lunghezza</span><input type="number" inputmode="decimal" min="0" step="0.1" aria-label="Lunghezza dello spazio in metri" data-spazio-l /></label>
           <span class="per" aria-hidden="true">×</span>
-          <label><span class="sr-only">Larghezza dello spazio in metri</span><input type="number" inputmode="decimal" min="0" step="0.1" placeholder="5" data-spazio-w /></label>
+          <label class="misura"><span aria-hidden="true">Larghezza</span><input type="number" inputmode="decimal" min="0" step="0.1" aria-label="Larghezza dello spazio in metri" data-spazio-w /></label>
           <span class="unita">metri</span>
         </div>
       </fieldset>
@@ -91,15 +91,17 @@ const totale = prodotti.length;
     position: absolute; inset: 10px; border: 1.5px dashed color-mix(in srgb, var(--cielo-scuro) 45%, transparent);
     border-radius: 9px; pointer-events: none;
   }
-  .spazio fieldset { border: 0; padding: 0; margin: 0; display: flex; align-items: center; gap: var(--spazio-4); flex-wrap: wrap; }
-  .spazio legend { float: left; font-family: var(--font-titoli); font-weight: 720; font-stretch: 92%; font-size: var(--titolo-s); letter-spacing: -0.015em; padding: 0; margin-right: var(--spazio-4); }
-  .misure { display: flex; align-items: center; gap: var(--spazio-2); }
+  .spazio fieldset { border: 0; padding: 0; margin: 0; display: flex; align-items: flex-end; gap: var(--spazio-4); flex-wrap: wrap; }
+  .spazio legend { float: left; padding-bottom: 0.55rem !important; font-family: var(--font-titoli); font-weight: 720; font-stretch: 92%; font-size: var(--titolo-s); letter-spacing: -0.015em; padding: 0; margin-right: var(--spazio-4); }
+  .misure { display: flex; align-items: flex-end; gap: var(--spazio-2); }
+  .misura { display: grid; gap: 0.2rem; }
+  .misura span { font-size: var(--testo-xs); font-weight: 700; color: var(--cielo-scuro); }
+  .per, .unita { padding-bottom: 0.7rem; }
   .misure input {
     width: 5.5rem; min-height: 3rem; padding: 0 0.75rem; text-align: center;
     font-family: var(--font-titoli); font-weight: 650; font-size: 1.35rem; font-variant-numeric: tabular-nums;
     border: 1.5px solid var(--cielo-scuro); border-radius: var(--raggio); background: #fff;
   }
-  .misure input::placeholder { color: color-mix(in srgb, var(--cielo-scuro) 45%, transparent); }
   .per { font-size: 1.4rem; color: var(--cielo-scuro); }
   .unita { font-family: var(--font-titoli); font-weight: 600; color: var(--cielo-scuro); }
   .nota { font-size: var(--testo-s); color: var(--cielo-scuro); max-width: 46ch; justify-self: end; }
@@ -107,11 +109,11 @@ const totale = prodotti.length;
   .copertura { margin-top: var(--spazio-2) !important; font-weight: 700; }
 
   .corpo { display: grid; grid-template-columns: 15.5rem 1fr; gap: var(--spazio-6); align-items: start; }
-  .corpo > :global(.pannello) { position: sticky; top: 6rem; }
+  @media (min-width: 900px) { .corpo > :global(.pannello) { position: sticky; top: 6rem; } }
   .barra { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: var(--spazio-3); margin-bottom: var(--spazio-5); }
-  .linee { display: flex; flex-wrap: wrap; gap: 2px; padding: 3px; background: var(--carta-2); border-radius: calc(var(--raggio) + 3px); }
+  .linee { display: flex; gap: 2px; max-width: 100%; overflow-x: auto; scrollbar-width: none; padding: 3px; background: var(--carta-2); border-radius: calc(var(--raggio) + 3px); }
   .linea {
-    min-height: 2.5rem; padding: 0 0.95rem; border: 0; border-radius: var(--raggio); background: transparent; cursor: pointer;
+    flex: none; white-space: nowrap; min-height: 2.5rem; padding: 0 0.95rem; border: 0; border-radius: var(--raggio); background: transparent; cursor: pointer;
     font-family: var(--font-titoli); font-weight: 600; font-size: var(--testo-s); color: var(--inchiostro-2);
   }
   .linea:hover { color: var(--inchiostro); }
