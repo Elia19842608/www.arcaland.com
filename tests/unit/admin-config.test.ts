@@ -10,7 +10,7 @@ const valori = (f: { options: (string | { value: string })[] }) => f.options.map
 
 describe('configurazione del pannello', () => {
   it('backend GitHub sul repository del sito', () => {
-    expect(config.backend).toMatchObject({ name: 'github', repo: 'Elia19842608/arcaland-sito', branch: 'main' });
+    expect(config.backend).toMatchObject({ name: 'github', repo: 'Elia19842608/www.arcaland.com', branch: 'main' });
   });
   it('collection prodotti nella cartella giusta', () => {
     expect(prodotti.folder).toBe('src/content/prodotti');

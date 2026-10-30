@@ -1,6 +1,6 @@
 backend:
   name: github
-  repo: Elia19842608/arcaland-sito
+  repo: Elia19842608/www.arcaland.com
   branch: main
   commit_messages:
     create: 'contenuti: crea {{collection}} "{{slug}}"'

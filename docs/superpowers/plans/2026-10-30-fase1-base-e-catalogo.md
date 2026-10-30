@@ -32,7 +32,7 @@ Il pulsante **+** e "Aggiungi alla richiesta" in questa fase sono visibili ma po
 - **Nessun prezzo**: non si importa, non si salva nei file, non si pubblica.
 - Campi vuoti nascosti; non si mostra mai "N/D", "null" o "undefined".
 - Prestazioni: Lighthouse mobile ≥ 90 in tutte le categorie, LCP < 2,5 s, CLS < 0,1.
-- Repository GitHub: `Elia19842608/arcaland-sito`. Hosting Netlify.
+- Repository GitHub: `Elia19842608/www.arcaland.com`. Hosting Netlify.
 
 ## Punti critici da presidiare
 
@@ -319,7 +319,7 @@ Unità SVG = cm. L'ingombro va centrato nell'area; le quote si scrivono in metri
 
 - [ ] **Passo 1: Test che fallisce** in `admin-config.test.ts`:
   - legge `config.yml` con `yaml`;
-  - verifica che il backend sia `github` con repo `Elia19842608/arcaland-sito` e branch `main`;
+  - verifica che il backend sia `github` con repo `Elia19842608/www.arcaland.com` e branch `main`;
   - verifica che la collection `prodotti` punti a `src/content/prodotti`, con `media_folder: public/media/prodotti`;
   - verifica che **l'insieme dei nomi dei campi coincida** con le chiavi di `prodottoSchema` (così pannello e schema non divergono);
   - verifica che materiale e linea siano campi `select` con gli stessi valori di Zod;
@@ -375,6 +375,6 @@ Riconoscimento:
 - [ ] **Passo 2:** Esegui. Correggi finché il test passa.
 - [ ] **Passo 3:** Esegui Lighthouse mobile (`npx lighthouse` con Chromium preinstallato) su `/prodotti` e su una scheda. Atteso: ≥ 90 in tutte e quattro le categorie, LCP < 2,5 s, CLS < 0,1. Correggi finché i valori non sono raggiunti.
 - [ ] **Passo 4:** Passa impeccable `audit`, poi `critique`, poi `polish` sulle tre pagine e applica le correzioni. Riesegui tutti i test (`npm test && npm run test:e2e`).
-- [ ] **Passo 5:** Crea il repository `Elia19842608/arcaland-sito` (oppure chiedi a Elia di crearlo), fai il push e collega Netlify per l'anteprima. Se il collegamento richiede azioni nel suo account, prepara le istruzioni passo per passo.
+- [ ] **Passo 5:** Crea il repository `Elia19842608/www.arcaland.com` (oppure chiedi a Elia di crearlo), fai il push e collega Netlify per l'anteprima. Se il collegamento richiede azioni nel suo account, prepara le istruzioni passo per passo.
 - [ ] **Passo 6:** Apri l'URL di anteprima con Playwright e verifica che `/prodotti`, una scheda e `/admin` rispondano. Salva gli screenshot a 1440 e 375 px.
 - [ ] **Passo 7:** Commit `chore: verifica finale fase 1` e invia a Elia l'URL di anteprima, gli screenshot e il report delle schede incomplete.
