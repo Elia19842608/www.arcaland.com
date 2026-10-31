@@ -1,0 +1,194 @@
+---
+import Progetto from './disegni/Progetto.astro';
+import Produzione from './disegni/Produzione.astro';
+import Posa from './disegni/Posa.astro';
+import Ispezione from './disegni/Ispezione.astro';
+import NelTempo from './disegni/NelTempo.astro';
+
+const tavole = [
+  { n: 1, titolo: 'Il progetto' },
+  { n: 2, titolo: 'Il materiale' },
+  { n: 3, titolo: 'La posa' },
+  { n: 4, titolo: "L'ispezione" },
+  { n: 5, titolo: 'Nel tempo' },
+];
+---
+<div class="racconto" data-racconto>
+  <div class="foglio" data-foglio>
+    <div class="scena">
+      <section class="pagina attiva" id="tavola-1" data-pagina="1" aria-labelledby="titolo-apertura">
+        <div class="testo">
+          <h1 id="titolo-apertura">Aree gioco che durano.</h1>
+          <p class="sottotitolo">Le progettiamo, ne seguiamo la posa e le teniamo sotto controllo con ispezioni periodiche documentate secondo la UNI EN 1176. In legno, acciaio o misto.</p>
+          <div class="azioni">
+            <a class="bottone bottone-primario" href="/prodotti">Esplora i prodotti</a>
+            <a class="bottone bottone-secondario" href="/richiesta">Richiedi un preventivo</a>
+          </div>
+        </div>
+        <div class="tavola-disegno"><Progetto /></div>
+      </section>
+
+      <section class="pagina" id="tavola-2" data-pagina="2" aria-labelledby="titolo-t2">
+        <div class="testo">
+          <h2 id="titolo-t2">Il materiale</h2>
+          <p>Legno, acciaio o misto: lo scegliamo insieme in base all'uso, all'esposizione e alla manutenzione che puoi garantire negli anni.</p>
+          <p class="dato">I giochi in legno nascono nel nostro stabilimento di Porto Viro.</p>
+        </div>
+        <div class="tavola-disegno"><Produzione /></div>
+      </section>
+
+      <section class="pagina" id="tavola-3" data-pagina="3" aria-labelledby="titolo-t3">
+        <div class="testo">
+          <h2 id="titolo-t3">La posa</h2>
+          <p>Seguiamo il montaggio con squadre specializzate e consegniamo l'area pronta, con la pavimentazione antitrauma dove serve.</p>
+          <p class="dato">Un cantiere coordinato da chi ha progettato l'area.</p>
+        </div>
+        <div class="tavola-disegno"><Posa /></div>
+      </section>
+
+      <section class="pagina" id="tavola-4" data-pagina="4" aria-labelledby="titolo-t4">
+        <div class="testo">
+          <h2 id="titolo-t4">L'ispezione</h2>
+          <p>Controlli documentati secondo la UNI EN 1176, con un verbale per ogni area e, se serve, il preventivo degli interventi.</p>
+          <ol class="legenda" aria-label="Punti di controllo">
+            <li>Ancoraggi e fondazioni</li><li>Altezza di caduta</li><li>Spazio libero e area di impatto</li><li>Usura, giunzioni e bulloneria</li>
+          </ol>
+        </div>
+        <div class="tavola-disegno"><Ispezione /></div>
+      </section>
+
+      <section class="pagina" id="tavola-5" data-pagina="5" aria-labelledby="titolo-t5">
+        <div class="testo">
+          <h2 id="titolo-t5">Nel tempo</h2>
+          <p>Un solo interlocutore dalla prima tavola all'ultima ispezione: chi progetta il tuo parco è chi lo segue negli anni.</p>
+          <a class="bottone bottone-primario" href="/richiesta">Richiedi un preventivo</a>
+        </div>
+        <div class="tavola-disegno"><NelTempo /></div>
+      </section>
+    </div>
+
+    <nav class="indice" aria-label="Tavole">
+      <ol>
+        {tavole.map((t) => (
+          <li><a href={`#tavola-${t.n}`} aria-current={t.n === 1 ? 'step' : undefined} data-indice={t.n}><span>{t.n}</span>{t.titolo}</a></li>
+        ))}
+      </ol>
+    </nav>
+
+    <div class="cartiglio" aria-hidden="true">
+      <div class="riga-grande">Area gioco · progetto di esempio<b data-cartiglio-titolo>Tavola 1 di 5 — Il progetto</b></div>
+      <div>Committente<b>Il tuo comune</b></div>
+      <div>Norma<b>UNI EN 1176</b></div>
+      <div>Scala<b>1:100</b></div>
+    </div>
+  </div>
+
+  <div class="ancore" aria-hidden="true">
+    {tavole.map((t) => <div class="ancora" data-ancora={t.n}></div>)}
+  </div>
+</div>
+
+<script>
+  import { avviaTavole } from '../../scripts/tavole-client';
+  avviaTavole();
+</script>
+
+<style>
+  .racconto { position: relative; padding: var(--spazio-5) var(--spazio-5) 0; }
+  .foglio {
+    position: relative; max-width: 86rem; margin-inline: auto; padding: var(--spazio-6) var(--spazio-6) var(--spazio-5);
+    background: var(--carta); border: 1.5px solid var(--inchiostro);
+    display: grid; grid-template-rows: 1fr auto; gap: var(--spazio-5);
+  }
+  .foglio::before { content: ''; position: absolute; inset: 9px; border: 1px solid color-mix(in srgb, var(--inchiostro) 35%, transparent); pointer-events: none; }
+  .scena { position: relative; display: grid; gap: var(--spazio-8); }
+  .pagina { display: grid; grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr); gap: var(--spazio-7); align-items: center; }
+  .testo { max-width: 34rem; }
+  h1 { font-size: clamp(2.6rem, 1.6rem + 4vw, 4.9rem); font-weight: 790; letter-spacing: -0.035em; font-stretch: 88%; }
+  h2 { font-size: clamp(2rem, 1.4rem + 2.4vw, 3.4rem); font-weight: 760; letter-spacing: -0.03em; font-stretch: 88%; }
+  .testo p { font-size: var(--testo-l); line-height: 1.55; color: var(--inchiostro-2); }
+  .sottotitolo { max-width: 32ch; }
+  .dato { font-family: var(--font-titoli); font-weight: 650; color: var(--inchiostro) !important; font-size: var(--testo-m) !important; padding-left: var(--spazio-4); box-shadow: inset 2px 0 0 var(--oro); }
+  .azioni { display: flex; flex-wrap: wrap; gap: var(--spazio-3); margin-top: var(--spazio-5); }
+  .tavola-disegno :global(.disegno) { width: 100%; height: auto; max-height: 30rem; overflow: visible; }
+
+  .indice ol { display: flex; flex-wrap: wrap; gap: 6px; list-style: none; margin: 0; padding: 0; }
+  .indice a {
+    display: inline-flex; align-items: center; gap: 0.45rem; min-height: 2.25rem; padding: 0 0.75rem;
+    border: 1px solid var(--linea-forte); border-radius: 4px; text-decoration: none;
+    font-family: var(--font-titoli); font-weight: 600; font-size: var(--testo-xs); color: var(--inchiostro-2);
+    transition: background-color var(--durata) var(--curva), color var(--durata) var(--curva);
+  }
+  .indice a span { font-variant-numeric: tabular-nums; color: var(--inchiostro-3); }
+  .indice a:hover { border-color: var(--inchiostro); color: var(--inchiostro); }
+  .indice a[aria-current='step'] { background: var(--inchiostro); border-color: var(--inchiostro); color: var(--carta); }
+  .indice a[aria-current='step'] span { color: var(--oro); }
+
+  .cartiglio {
+    position: absolute; right: 9px; bottom: 9px; width: min(34rem, 46%);
+    display: grid; grid-template-columns: repeat(3, 1fr); background: var(--carta);
+    border-top: 1.5px solid var(--inchiostro); border-left: 1.5px solid var(--inchiostro);
+    font-size: 0.75rem; color: var(--inchiostro-3);
+  }
+  .cartiglio > div { padding: 0.45rem 0.75rem; border-right: 1px solid color-mix(in srgb, var(--inchiostro) 35%, transparent); border-bottom: 1px solid color-mix(in srgb, var(--inchiostro) 35%, transparent); }
+  .cartiglio > div:last-child, .cartiglio .riga-grande { border-right: 0; }
+  .cartiglio b { display: block; font-family: var(--font-titoli); font-weight: 650; font-size: 0.95rem; color: var(--inchiostro); font-variant-numeric: tabular-nums; }
+  .cartiglio .riga-grande { grid-column: 1 / -1; }
+  .cartiglio .riga-grande b { font-size: 1.15rem; }
+  .ancore { display: none; }
+  .legenda { display: none; margin: var(--spazio-4) 0 0; padding: 0; list-style: none; counter-reset: punto; }
+  .legenda li { counter-increment: punto; display: flex; align-items: center; gap: var(--spazio-3); padding: 0.35rem 0; font-family: var(--font-titoli); font-weight: 650; }
+  .legenda li::before { content: counter(punto); display: grid; place-items: center; flex: none; width: 1.6rem; height: 1.6rem; border-radius: 50%; background: var(--oro); border: 1.3px solid var(--inchiostro); font-size: var(--testo-xs); }
+  :global(.racconto:not(.animato)) .indice, :global(.racconto:not(.animato)) .cartiglio { display: none; }
+  :global(.racconto:not(.animato)) .foglio { grid-template-rows: 1fr; }
+  .pagina { scroll-margin-top: 6rem; }
+
+  /* grammatica dei disegni */
+  .foglio :global(.quota line), .foglio :global(.terreno), .foglio :global(.asse) { stroke: var(--inchiostro-3); stroke-width: 1.5; }
+  .foglio :global(.quota text), .foglio :global(.anno), .foglio :global(.nota) { font-family: var(--font-titoli); font-weight: 650; font-size: 15px; fill: var(--inchiostro-2); }
+  .foglio :global(.lotto) { fill: var(--cielo-chiaro); stroke: var(--cielo-scuro); stroke-width: 2; stroke-dasharray: 12 8; }
+  .foglio :global(.zona) { fill: #fff; stroke: var(--cielo-scuro); stroke-width: 1.3; stroke-dasharray: 8 6; }
+  .foglio :global(.pezzo) { fill: color-mix(in srgb, var(--inchiostro) 15%, #fff); stroke: var(--inchiostro); stroke-width: 1.3; }
+  .foglio :global(.oro) { fill: var(--oro); stroke: var(--inchiostro); stroke-width: 1.3; }
+  .foglio :global(.etichetta) { font-family: var(--font-titoli); font-weight: 650; font-size: 14px; fill: var(--inchiostro); }
+  .foglio :global(.legno) { fill: #e9d3ae; stroke: var(--inchiostro); stroke-width: 1.3; }
+  .foglio :global(.venatura) { fill: none; stroke: #9a7346; stroke-width: 1.4; }
+  .foglio :global(.acciaio) { fill: url(#tratteggio); stroke: var(--inchiostro); stroke-width: 1.3; }
+  .foglio :global(.vuoto) { fill: var(--carta); stroke: var(--inchiostro); stroke-width: 1.3; }
+  .foglio :global(.titolo-sezione) { font-family: var(--font-titoli); font-weight: 720; font-size: 22px; fill: var(--inchiostro); }
+  .foglio :global(.guide line) { stroke: var(--cielo-scuro); stroke-width: 1; stroke-dasharray: 4 6; opacity: 0.6; }
+  .foglio :global(.scivolo) { fill: none; stroke: var(--inchiostro); stroke-width: 14; stroke-linecap: round; opacity: 0.85; }
+  .foglio :global(.fantasma) { fill: color-mix(in srgb, var(--inchiostro) 8%, transparent); stroke: color-mix(in srgb, var(--inchiostro) 45%, transparent); stroke-width: 1.2; }
+  .foglio :global(.fantasma path) { stroke-width: 10; }
+  .foglio :global(.richiamo) { stroke: var(--cielo-scuro); stroke-width: 1.2; }
+  .foglio :global(.punto) { fill: var(--oro); stroke: var(--inchiostro); stroke-width: 1.3; }
+  .foglio :global(.numero) { font-family: var(--font-titoli); font-weight: 760; font-size: 15px; fill: var(--inchiostro); }
+  .foglio :global(.voce) { font-family: var(--font-titoli); font-weight: 650; font-size: 21px; fill: var(--inchiostro); }
+  .foglio :global(.spunta) { fill: none; stroke: var(--cielo-scuro); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+  .foglio :global(.tacca) { stroke: var(--inchiostro); stroke-width: 1.5; }
+  .foglio :global(.ispezione) { fill: var(--cielo-scuro); }
+
+  /* modalità animata: solo desktop, con JavaScript e movimento consentito */
+  :global(.racconto.animato) { height: 500vh; padding-top: 0; }
+  :global(.racconto.animato) .foglio { position: sticky; top: calc(4.25rem + var(--spazio-4)); height: calc(100vh - 4.25rem - 2 * var(--spazio-4)); margin-top: var(--spazio-4); }
+  :global(.racconto.animato) .scena { display: block; }
+  :global(.racconto.animato) .pagina { position: absolute; inset: 0; opacity: 0; transition: opacity 300ms var(--curva); pointer-events: none; }
+  :global(.racconto.animato) .pagina.attiva { opacity: 1; pointer-events: auto; }
+  :global(.racconto.animato) .ancore { display: block; position: absolute; inset: 0; pointer-events: none; }
+  :global(.racconto.animato) .ancora { height: 100vh; scroll-margin-top: 0; }
+  :global(.racconto.animato) .pagina :global(.disegna) { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 900ms var(--curva); }
+  :global(.racconto.animato) .pagina.attiva :global(.disegna) { stroke-dashoffset: 0; }
+  :global(.racconto.animato) .pagina :global(.compare) { opacity: 0; transition: opacity 500ms var(--curva), transform 700ms var(--curva); transition-delay: calc(var(--i, 0) * 140ms + 250ms); }
+  :global(.racconto.animato) .pagina :global(.scende) { transform: translateY(-60px); }
+  :global(.racconto.animato) .pagina.attiva :global(.compare) { opacity: 1; transform: none; }
+
+  @media (max-width: 899px) {
+    .racconto { padding: var(--spazio-3) var(--spazio-3) 0; }
+    .foglio { padding: var(--spazio-5) var(--spazio-4) var(--spazio-4); }
+    .pagina { grid-template-columns: 1fr; gap: var(--spazio-4); }
+    .scena { gap: var(--spazio-7); }
+    .legenda { display: block; }
+    .foglio :global(.voce), .foglio :global(.spunta) { display: none; }
+    .cartiglio { position: static; width: auto; margin: 0 calc(-1 * var(--spazio-4)) calc(-1 * var(--spazio-4)); border-left: 0; }
+  }
+</style>

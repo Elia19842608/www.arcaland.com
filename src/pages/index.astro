@@ -1,13 +1,18 @@
 ---
 import Base from '../layouts/Base.astro';
+import Racconto from '../components/home/Racconto.astro';
+import Linee from '../components/home/Linee.astro';
+import Hexaplay from '../components/home/Hexaplay.astro';
+import Lavori from '../components/home/Lavori.astro';
+import Chiusura from '../components/home/Chiusura.astro';
+import { prodottiAttivi } from '../lib/catalogo/carica';
+
+const prodotti = await prodottiAttivi();
 ---
-<Base titolo="Arcaland">
-  <section class="contenitore cantiere">
-    <h1>Aree gioco che durano.</h1>
-    <p>Il nuovo sito Arcaland è in costruzione. Intanto puoi sfogliare il catalogo dei prodotti.</p>
-    <a class="bottone bottone-primario" href="/prodotti">Esplora i prodotti</a>
-  </section>
+<Base titolo="Arcaland" descrizione="Arcaland progetta aree gioco e arredo urbano in legno, acciaio e misti, ne segue la posa e le controlla con ispezioni periodiche secondo la UNI EN 1176.">
+  <Racconto />
+  <Linee prodotti={prodotti} />
+  <Hexaplay />
+  <Lavori />
+  <Chiusura />
 </Base>
-<style>
-  .cantiere { padding-block: var(--spazio-8); }
-</style>

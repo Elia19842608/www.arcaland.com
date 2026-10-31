@@ -35,6 +35,15 @@ Il sito parla la lingua della **pianta tecnica dell'area gioco**: aree di sicure
 - **Pannello filtri**: colonna fissa su desktop; foglio ancorato in basso su telefono, con velo, Esc per chiudere e focus che torna al pulsante.
 - **Segnaposto immagine**: riquadro Cielo tratteggiato "Immagine in arrivo"; mai icone generiche.
 
+## Home: il foglio di progetto
+
+- **Foglio**: doppia cornice in Inchiostro (1,5px esterna, 1px interna al 35%), fondo Carta; su desktop resta fermo mentre si scorre e mostra cinque tavole.
+- **Cartiglio** in basso a destra: righe in Inchiostro al 35%, titolo "Tavola N di 5 — titolo" in Archivo; è decorativo (`aria-hidden`), il contenuto vero sta nelle tavole.
+- **Indice delle tavole**: etichette squadrate (raggio 4px), la tavola attiva è piena di Inchiostro con il numero in Oro.
+- **Grammatica dei disegni SVG**: quote e assi in Inchiostro 3; lotti Cielo chiaro con tratteggio 12/8; zone di sicurezza bianche con tratteggio 8/6; pezzi in Inchiostro al 15%; un solo elemento Oro per disegno; etichette Archivo 650.
+- **Movimento delle tavole**: linee che si tracciano (`.disegna`, 900ms), elementi che compaiono in sequenza (`.compare`, 140ms di scarto), pezzi che scendono (`.scende`) solo nella posa. Su telefono, con "riduci movimento" o senza JavaScript, le tavole sono impilate e i disegni completi.
+- **Righe d'indice** al posto delle card per le linee di prodotto; **tabella** per i lavori recenti.
+
 ## Movimento
 
 Durata 220ms, curva `cubic-bezier(0.16, 1, 0.3, 1)`. Solo transizioni di stato (hover, pressione, cambio foto). Con "riduci movimento" la durata va a zero.
