@@ -1,0 +1,11 @@
+@font-face{font-family:A;src:url(file:///home/claude/www.arcaland.com/node_modules/@fontsource-variable/archivo/files/archivo-latin-wdth-normal.woff2) format('woff2');font-weight:100 900;font-stretch:62% 125%}
+@font-face{font-family:B;src:url(file:///home/claude/www.arcaland.com/node_modules/@fontsource-variable/atkinson-hyperlegible-next/files/atkinson-hyperlegible-next-latin-wght-normal.woff2) format('woff2');font-weight:200 800}
+*{box-sizing:border-box;margin:0}html,body{width:1440px;height:900px;overflow:hidden}
+body{background:#FBF8F2;color:#222018;font-family:B,sans-serif;font-size:17px;line-height:1.55}
+.h{font-family:A,sans-serif;font-stretch:90%;letter-spacing:-.03em;line-height:1.02}
+.nav{height:68px;display:flex;align-items:center;gap:28px;padding:0 96px;border-bottom:1px solid rgba(34,32,24,.14)}
+.logo{display:flex;align-items:center;gap:9px;font-family:A;font-weight:800;font-stretch:88%;font-size:23px;letter-spacing:-.035em;margin-right:auto}
+.logo i{width:21px;height:24px;background:#E6AF0B;clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%)}
+.nav a{font-family:A;font-weight:560;font-size:15px;color:#4A463B}
+.cta{background:#E6AF0B;color:#222018;font-family:A;font-weight:650;border-radius:6px;padding:12px 18px;font-size:15px}
+.cta2{border:1.5px solid rgba(34,32,24,.28);font-family:A;font-weight:650;border-radius:6px;padding:11px 17px;font-size:15px}
