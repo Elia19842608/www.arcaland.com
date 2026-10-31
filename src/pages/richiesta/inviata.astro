@@ -1,0 +1,38 @@
+---
+import Base from '../../layouts/Base.astro';
+import { emailRichieste } from '../../lib/catalogo/carica';
+const email = await emailRichieste();
+---
+<Base titolo="Richiesta inviata">
+  <section class="contenitore inviata">
+    <div class="segno" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+    </div>
+    <h1>Richiesta inviata</h1>
+    <p class="intro">Grazie, l'abbiamo ricevuta. Ti ricontattiamo al più presto con un'offerta su misura.</p>
+    <div class="riepilogo" data-riepilogo hidden>
+      <h2>Hai chiesto</h2>
+      <pre data-riepilogo-testo></pre>
+    </div>
+    <p class="contatto">Per aggiungere qualcosa scrivici a <a href={`mailto:${email}`}>{email}</a>.</p>
+    <a class="bottone bottone-primario" href="/prodotti">Torna al catalogo</a>
+  </section>
+</Base>
+<script>
+  try {
+    const testo = sessionStorage.getItem('arcaland-ultima-richiesta');
+    const box = document.querySelector<HTMLElement>('[data-riepilogo]');
+    const pre = document.querySelector<HTMLElement>('[data-riepilogo-testo]');
+    if (testo && box && pre) { pre.textContent = testo; box.hidden = false; }
+  } catch { /* nessun riepilogo disponibile */ }
+</script>
+<style>
+  .inviata { padding-block: var(--spazio-8); max-width: 44rem; }
+  .segno { display: grid; place-items: center; width: 3.5rem; height: 3.5rem; margin-bottom: var(--spazio-5); border-radius: 50%; background: var(--oro); color: var(--inchiostro); }
+  .segno svg { width: 1.8rem; height: 1.8rem; }
+  .intro { font-size: var(--testo-l); color: var(--inchiostro-2); }
+  .riepilogo { margin: var(--spazio-5) 0; padding: var(--spazio-4) var(--spazio-5); background: #fff; border-radius: var(--raggio-l); box-shadow: 0 0 0 1px var(--linea); }
+  .riepilogo h2 { font-size: var(--testo-m); margin-bottom: var(--spazio-2); }
+  .riepilogo pre { margin: 0; white-space: pre-wrap; font-family: var(--font-testo); font-size: var(--testo-s); line-height: 1.7; font-variant-numeric: tabular-nums; }
+  .contatto { color: var(--inchiostro-2); }
+</style>

@@ -1,0 +1,173 @@
+---
+import Base from '../../layouts/Base.astro';
+import Icona from '../../components/Icona.astro';
+import { emailRichieste } from '../../lib/catalogo/carica';
+const email = await emailRichieste();
+---
+<Base titolo="Richiedi un preventivo" descrizione="Invia ad Arcaland la tua richiesta di preventivo per giochi, arredo urbano e percorsi sportivi: prodotti, quantità e area da attrezzare.">
+  <div class="contenitore richiesta">
+    <header class="testa">
+      <h1>Richiedi un preventivo</h1>
+      <p>Ti prepariamo un'offerta su misura, con posa e area di sicurezza comprese. Niente prezzi a listino: ogni area è diversa.</p>
+    </header>
+
+    <div class="colonne">
+      <section class="selezione" aria-labelledby="titolo-selezione">
+        <div class="selezione-testa">
+          <h2 id="titolo-selezione">Prodotti selezionati</h2>
+          <p class="conteggio" data-conteggio-richiesta></p>
+        </div>
+        <ul class="righe" data-righe-richiesta></ul>
+        <div class="vuota" data-richiesta-vuota>
+          <div class="area" aria-hidden="true"></div>
+          <p><strong>Nessun prodotto selezionato.</strong> Puoi aggiungerli dal catalogo, oppure descrivere nelle note il progetto che hai in mente: lo disegniamo noi.</p>
+        </div>
+        <a class="aggiungi-altri" href="/prodotti"><Icona nome="plus" />Aggiungi altri prodotti</a>
+      </section>
+
+      <form class="modulo" name="richiesta-preventivo" method="POST" action="/richiesta/inviata" data-netlify="true" netlify-honeypot="bot-field" enctype="multipart/form-data" novalidate data-form-richiesta>
+        <input type="hidden" name="form-name" value="richiesta-preventivo" />
+        <input type="hidden" name="prodotti" value="" data-campo-prodotti />
+        <p class="nascosto" aria-hidden="true"><label>Non compilare <input name="bot-field" tabindex="-1" autocomplete="off" /></label></p>
+
+        <h2>I tuoi dati</h2>
+
+        <fieldset class="campo" data-campo="tipo_cliente">
+          <legend>Chi sei</legend>
+          <div class="scelte-tipo">
+            <label class="tipo"><input type="radio" name="tipo_cliente" value="Ente pubblico" aria-describedby="err-tipo_cliente" /><span>Ente pubblico</span></label>
+            <label class="tipo"><input type="radio" name="tipo_cliente" value="Attività privata" aria-describedby="err-tipo_cliente" /><span>Attività privata</span></label>
+          </div>
+          <p class="errore" id="err-tipo_cliente" hidden></p>
+        </fieldset>
+
+        <div class="due">
+          <div class="campo" data-campo="nome">
+            <label for="nome">Nome e cognome</label>
+            <input id="nome" name="nome" autocomplete="name" aria-describedby="err-nome" />
+            <p class="errore" id="err-nome" hidden></p>
+          </div>
+          <div class="campo" data-campo="ente">
+            <label for="ente">Ente o azienda</label>
+            <input id="ente" name="ente" autocomplete="organization" aria-describedby="err-ente" />
+            <p class="errore" id="err-ente" hidden></p>
+          </div>
+          <div class="campo" data-campo="email">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" autocomplete="email" aria-describedby="err-email" />
+            <p class="errore" id="err-email" hidden></p>
+          </div>
+          <div class="campo" data-campo="telefono">
+            <label for="telefono">Telefono</label>
+            <input id="telefono" name="telefono" type="tel" autocomplete="tel" aria-describedby="err-telefono" />
+            <p class="errore" id="err-telefono" hidden></p>
+          </div>
+        </div>
+
+        <div class="campo" data-campo="comune">
+          <label for="comune">Comune dell'area</label>
+          <input id="comune" name="comune" autocomplete="address-level2" aria-describedby="aiuto-comune err-comune" />
+          <p class="aiuto" id="aiuto-comune">Dove si trova l'area da attrezzare: ci serve per la posa e il sopralluogo.</p>
+          <p class="errore" id="err-comune" hidden></p>
+        </div>
+
+        <div class="campo" data-campo="note">
+          <label for="note">Note</label>
+          <textarea id="note" name="note" rows="5" aria-describedby="aiuto-note err-note"></textarea>
+          <p class="aiuto" id="aiuto-note">Misure dell'area, fascia d'età, tempi, gara o affidamento diretto: tutto quello che ci aiuta.</p>
+          <p class="errore" id="err-note" hidden></p>
+        </div>
+
+        <div class="campo" data-campo="allegato">
+          <label for="allegato">Allegato</label>
+          <input id="allegato" name="allegato" type="file" accept=".pdf,.jpg,.jpeg,.png,.dwg,.zip" aria-describedby="aiuto-allegato err-allegato" />
+          <p class="aiuto" id="aiuto-allegato">Facoltativo. Una planimetria o una foto dell'area. PDF, JPG, PNG, DWG o ZIP, fino a 8 MB.</p>
+          <p class="errore" id="err-allegato" hidden></p>
+        </div>
+
+        <div class="invio-errore" role="alert" data-errore-invio hidden>
+          <p><strong>Non siamo riusciti a inviare la richiesta.</strong> Controlla la connessione e riprova: i dati che hai inserito sono ancora qui.</p>
+          <button type="button" class="bottone bottone-secondario" data-riprova>Riprova</button>
+        </div>
+
+        <button type="submit" class="bottone bottone-primario invia" data-invia>Invia la richiesta</button>
+        <p class="privacy">Usiamo i tuoi dati solo per rispondere a questa richiesta. Se preferisci, scrivici a <a href={`mailto:${email}`}>{email}</a>.</p>
+        <noscript><p class="privacy"><strong>Per inviare la richiesta online serve JavaScript attivo.</strong> In alternativa scrivici a {email}.</p></noscript>
+      </form>
+    </div>
+  </div>
+</Base>
+
+<script>
+  import { avviaRichiesta } from '../../scripts/richiesta-client';
+  avviaRichiesta();
+</script>
+
+<style>
+  .richiesta { padding-block: var(--spazio-7) 0; }
+  .testa { max-width: 44rem; margin-bottom: var(--spazio-6); }
+  .testa p { color: var(--inchiostro-2); font-size: var(--testo-l); line-height: 1.5; }
+  .colonne { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: var(--spazio-7); align-items: start; }
+
+  .selezione { position: sticky; top: 6rem; }
+  .selezione-testa { display: flex; justify-content: space-between; align-items: baseline; gap: var(--spazio-3); border-bottom: 1px solid var(--linea); padding-bottom: var(--spazio-3); }
+  .selezione h2 { font-size: var(--titolo-s); margin: 0; }
+  .conteggio { margin: 0; font-family: var(--font-titoli); font-weight: 600; color: var(--inchiostro-2); font-variant-numeric: tabular-nums; }
+  .righe { list-style: none; margin: 0; padding: 0; }
+  .righe :global(li) { display: grid; grid-template-columns: 1fr auto; gap: var(--spazio-2) var(--spazio-4); align-items: center; padding: var(--spazio-4) 0; border-bottom: 1px solid var(--linea); }
+  .righe :global(.nome) { margin: 0; font-family: var(--font-titoli); font-weight: 650; line-height: 1.25; }
+  .righe :global(.nome a) { text-decoration: none; }
+  .righe :global(.codice) { margin: 0; font-size: var(--testo-xs); color: var(--inchiostro-3); font-variant-numeric: tabular-nums; }
+  .righe :global(.controlli) { display: flex; align-items: center; gap: var(--spazio-2); }
+  .vuota { display: flex; gap: var(--spazio-4); align-items: flex-start; padding: var(--spazio-5) 0; border-bottom: 1px solid var(--linea); color: var(--inchiostro-2); }
+  .vuota p { margin: 0; }
+  .vuota strong { color: var(--inchiostro); }
+  .area { flex: none; width: 3.5rem; height: 2.5rem; border: 2px dashed var(--cielo-scuro); border-radius: 5px; background: var(--cielo-chiaro); }
+  .aggiungi-altri { display: inline-flex; align-items: center; gap: 0.4rem; margin-top: var(--spazio-4); font-family: var(--font-titoli); font-weight: 650; }
+  .aggiungi-altri :global(svg) { width: 1.1rem; height: 1.1rem; }
+
+  .modulo { display: grid; gap: var(--spazio-5); padding: var(--spazio-6); background: #fff; border-radius: var(--raggio-l); box-shadow: 0 0 0 1px var(--linea); }
+  .modulo h2 { font-size: var(--titolo-s); margin: 0; }
+  .nascosto { position: absolute; left: -9999px; }
+  .due { display: grid; grid-template-columns: 1fr 1fr; gap: var(--spazio-5) var(--spazio-4); }
+  .campo { display: grid; gap: var(--spazio-2); align-content: start; border: 0; margin: 0; padding: 0; min-width: 0; }
+  .campo label, .campo legend { font-family: var(--font-titoli); font-weight: 650; font-size: var(--testo-s); padding: 0; }
+  .campo legend { margin-bottom: var(--spazio-2); }
+  .campo input:not([type='radio']):not([type='file']), .campo textarea {
+    width: 100%; min-height: 2.9rem; padding: 0.6rem 0.8rem; border: 1.5px solid var(--linea-forte); border-radius: var(--raggio); background: var(--carta);
+    transition: border-color var(--durata) var(--curva), background-color var(--durata) var(--curva);
+  }
+  .campo textarea { resize: vertical; min-height: 8rem; line-height: 1.5; }
+  .campo input:hover, .campo textarea:hover { border-color: var(--inchiostro-3); }
+  .campo input:focus, .campo textarea:focus { background: #fff; }
+  .campo [aria-invalid='true'] { border-color: var(--terracotta) !important; }
+  .campo input[type='file'] { font-size: var(--testo-s); }
+  .campo input[type='file']::file-selector-button {
+    margin-right: var(--spazio-3); padding: 0.5rem 0.9rem; border: 1.5px solid var(--linea-forte); border-radius: var(--raggio);
+    background: var(--carta); font-family: var(--font-titoli); font-weight: 600; cursor: pointer;
+  }
+  .scelte-tipo { display: grid; grid-template-columns: 1fr 1fr; gap: var(--spazio-2); }
+  .campo .tipo { position: relative; display: flex; align-items: center; gap: var(--spazio-2); padding: 0.8rem 0.9rem; border: 1.5px solid var(--linea-forte); border-radius: var(--raggio); cursor: pointer; font-family: var(--font-testo) !important; font-weight: 400 !important; font-size: var(--testo-m) !important; }
+  .campo .tipo:hover { border-color: var(--inchiostro-3); }
+  .campo .tipo:has(input:checked) { border-color: var(--inchiostro); background: var(--carta-2); box-shadow: inset 0 0 0 1px var(--inchiostro); }
+  .tipo input { width: 1.1rem; height: 1.1rem; margin: 0; accent-color: var(--inchiostro); }
+  .aiuto { margin: 0; font-size: var(--testo-xs); color: var(--inchiostro-3); }
+  .errore { margin: 0; font-size: var(--testo-s); font-weight: 700; color: var(--terracotta-scuro); }
+  .invio-errore { display: grid; gap: var(--spazio-3); padding: var(--spazio-4); border-radius: var(--raggio); background: color-mix(in srgb, var(--terracotta) 10%, #fff); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--terracotta) 40%, transparent); }
+  .invio-errore p { margin: 0; color: var(--terracotta-scuro); }
+  .invio-errore .bottone { justify-self: start; }
+  .invia { justify-content: center; min-height: 3.25rem; font-size: var(--testo-m); }
+  .invia[aria-busy='true'] { opacity: 0.7; cursor: progress; }
+  .privacy { margin: 0; font-size: var(--testo-xs); color: var(--inchiostro-3); }
+
+  @media (max-width: 899px) {
+    .colonne { grid-template-columns: 1fr; gap: var(--spazio-6); }
+    .selezione { position: static; }
+    .modulo { padding: var(--spazio-5); }
+  }
+  @media (max-width: 560px) {
+    .due, .scelte-tipo { grid-template-columns: 1fr; }
+    .righe :global(li) { grid-template-columns: 1fr; }
+    .righe :global(.controlli) { justify-content: space-between; }
+  }
+</style>
