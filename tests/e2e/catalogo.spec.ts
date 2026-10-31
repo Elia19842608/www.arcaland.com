@@ -21,7 +21,7 @@ test('filtro materiale aggiorna risultati e URL', async ({ page }) => {
   await expect(tessere(page)).toHaveCount(1);
   await expect(tessere(page).first()).toContainText('Altalena doppia in acciaio');
   await expect(page).toHaveURL(/materiale=acciaio/);
-  await expect(page.getByRole('status')).toContainText('1 prodotto');
+  await expect(page.getByRole('status').filter({ hasText: /prodott/ })).toContainText('1 prodotto');
 });
 
 test('spazio dall’URL con la virgola', async ({ page }) => {
@@ -57,7 +57,7 @@ test('nessun risultato e azzera filtri', async ({ page }) => {
 
 test('aggiungi alla richiesta ha un nome accessibile', async ({ page }) => {
   await page.goto('/prodotti');
-  await expect(page.getByRole('link', { name: 'Aggiungi Panchina con schienale alla richiesta' })).toHaveAttribute('href', '/richiesta');
+  await expect(page.getByRole('link', { name: 'Aggiungi Panchina con schienale alla richiesta' })).toHaveAttribute('href', '/richiesta?aggiungi=5-pa100-00');
 });
 
 test('pannello filtri su mobile da tastiera', async ({ page }) => {

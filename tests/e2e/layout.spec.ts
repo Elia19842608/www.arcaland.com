@@ -6,7 +6,9 @@ test('header con navigazione e pulsante preventivo', async ({ page }) => {
   await page.goto('/');
   const nav = page.getByRole('navigation', { name: 'Principale' });
   for (const v of voci) await expect(nav.getByRole('link', { name: v, exact: true })).toBeVisible();
-  await expect(page.getByRole('banner').getByRole('link', { name: 'Richiedi preventivo' })).toBeVisible();
+  await expect(page.getByRole('banner').getByRole('button', { name: /Richiedi preventivo/ })).toBeVisible();
+  await expect(page.getByRole('banner').getByRole('button', { name: /Richiedi preventivo/ })).toContainText('Richiedi preventivo');
+  await expect(page.getByRole('banner').getByRole('link', { name: 'Richiedi preventivo' })).toBeHidden();
 });
 
 test('footer con i contatti', async ({ page }) => {

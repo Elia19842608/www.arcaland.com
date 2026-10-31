@@ -14,7 +14,8 @@ test('scheda completa', async ({ page }) => {
   await expect(page.getByRole('img', { name: /Area di sicurezza 7,00 × 5,00 m/ })).toBeVisible();
   await expect(page.getByRole('link', { name: 'Scheda tecnica PDF' })).toHaveAttribute('href', '/media/prova/scheda.pdf');
   await expect(page.getByRole('link', { name: 'Certificato EN 1176 PDF' })).toHaveAttribute('href', '/media/prova/certificato.pdf');
-  await expect(page.getByRole('link', { name: 'Aggiungi alla richiesta' })).toHaveAttribute('href', '/richiesta');
+  await expect(page.getByRole('button', { name: 'Aggiungi alla richiesta' })).toBeVisible();
+  await expect(page.getByLabel('Quantità')).toHaveValue('1');
 });
 
 test('scheda minima senza buchi', async ({ page }) => {

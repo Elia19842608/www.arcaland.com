@@ -11,8 +11,10 @@ import freccia from 'lucide-static/icons/arrow-right.svg?raw';
 import filtri from 'lucide-static/icons/sliders-horizontal.svg?raw';
 import file from 'lucide-static/icons/file-text.svg?raw';
 import check from 'lucide-static/icons/shield-check.svg?raw';
+import meno from 'lucide-static/icons/minus.svg?raw';
+import cestino from 'lucide-static/icons/trash-2.svg?raw';
 
-const icone = { menu, x, plus, clipboard, download, mail, mapPin, chevron, freccia, filtri, file, check } as const;
+const icone = { menu, x, plus, clipboard, download, mail, mapPin, chevron, freccia, filtri, file, check, meno, cestino } as const;
 export type NomeIcona = keyof typeof icone;
 interface Props { nome: NomeIcona; class?: string }
 const { nome, class: classe } = Astro.props;

@@ -1,0 +1,62 @@
+---
+import Icona from './Icona.astro';
+---
+<div class="velo-carrello" data-velo-carrello hidden></div>
+<aside class="carrello" role="dialog" aria-modal="true" aria-labelledby="titolo-carrello" data-carrello hidden>
+  <header class="testa">
+    <h2 id="titolo-carrello">La tua richiesta</h2>
+    <button type="button" class="chiudi" data-chiudi-carrello aria-label="Chiudi la richiesta"><Icona nome="x" /></button>
+  </header>
+  <p class="spiega">Nessun prezzo qui: ti prepariamo un'offerta su misura, posa e area di sicurezza comprese.</p>
+  <ul class="righe" data-righe-carrello></ul>
+  <div class="vuoto" data-carrello-vuoto hidden>
+    <div class="area" aria-hidden="true"></div>
+    <p><strong>La richiesta è vuota</strong></p>
+    <p>Aggiungi i prodotti dal catalogo con il pulsante +, oppure descrivi il tuo progetto nella pagina di richiesta.</p>
+    <div class="azioni-vuoto">
+      <a class="bottone bottone-primario" href="/prodotti">Vai al catalogo</a>
+      <a class="bottone bottone-secondario" href="/richiesta">Descrivi un progetto su misura</a>
+    </div>
+  </div>
+  <footer class="piede">
+    <p class="totale" data-totale-carrello></p>
+    <div class="azioni">
+      <button type="button" class="bottone bottone-secondario" data-chiudi-carrello>Continua a sfogliare</button>
+      <a class="bottone bottone-primario" href="/richiesta"><Icona nome="freccia" />Completa la richiesta</a>
+    </div>
+  </footer>
+</aside>
+
+<style>
+  .velo-carrello { position: fixed; inset: 0; z-index: 40; background: rgb(34 32 24 / 0.4); }
+  .carrello {
+    position: fixed; z-index: 41; top: 0; right: 0; bottom: 0; width: min(100%, 28rem);
+    display: grid; grid-template-rows: auto auto 1fr auto;
+    background: var(--carta); box-shadow: -16px 0 48px -12px rgb(34 32 24 / 0.3);
+  }
+  .carrello:not([hidden]) { animation: entra var(--durata) var(--curva); }
+  @keyframes entra { from { transform: translateX(2rem); opacity: 0; } }
+  .testa { display: flex; align-items: center; justify-content: space-between; padding: var(--spazio-5) var(--spazio-5) 0; }
+  .testa h2 { font-size: var(--titolo-s); margin: 0; }
+  .chiudi { display: grid; place-items: center; width: 2.75rem; height: 2.75rem; border: 0; background: none; cursor: pointer; border-radius: var(--raggio); }
+  .chiudi:hover { background: var(--carta-2); }
+  .chiudi :global(svg) { width: 1.4rem; height: 1.4rem; }
+  .spiega { margin: var(--spazio-2) var(--spazio-5) var(--spazio-4); font-size: var(--testo-s); color: var(--inchiostro-2); }
+  .righe { list-style: none; margin: 0; padding: 0 var(--spazio-5); overflow-y: auto; border-top: 1px solid var(--linea); }
+  .righe :global(li) { display: grid; grid-template-columns: 1fr auto; gap: var(--spazio-2) var(--spazio-4); align-items: center; padding: var(--spazio-4) 0; border-bottom: 1px solid var(--linea); }
+  .righe :global(.nome) { margin: 0; font-family: var(--font-titoli); font-weight: 650; line-height: 1.25; }
+  .righe :global(.nome a) { text-decoration: none; }
+  .righe :global(.codice) { margin: 0; font-size: var(--testo-xs); color: var(--inchiostro-3); font-variant-numeric: tabular-nums; }
+  .righe :global(.controlli) { grid-column: 1 / -1; display: flex; align-items: center; justify-content: space-between; }
+  .vuoto { padding: var(--spazio-6) var(--spazio-5); align-self: start; }
+  .vuoto p { margin-bottom: var(--spazio-3); color: var(--inchiostro-2); }
+  .vuoto strong { color: var(--inchiostro); font-family: var(--font-titoli); font-size: var(--testo-l); }
+  .azioni-vuoto { display: flex; flex-wrap: wrap; gap: var(--spazio-2); margin-top: var(--spazio-4); }
+  .area { width: 4.5rem; height: 3.25rem; border: 2px dashed var(--cielo-scuro); border-radius: 6px; background: var(--cielo-chiaro); margin-bottom: var(--spazio-4); }
+  .piede { padding: var(--spazio-4) var(--spazio-5) calc(var(--spazio-5) + env(safe-area-inset-bottom)); border-top: 1px solid var(--linea); background: var(--carta); }
+  .totale { margin: 0 0 var(--spazio-3); font-family: var(--font-titoli); font-weight: 650; font-variant-numeric: tabular-nums; }
+  .azioni { display: grid; grid-template-columns: auto 1fr; gap: var(--spazio-2); }
+  .azioni .bottone { white-space: nowrap; }
+  .azioni .bottone { justify-content: center; }
+  @media (prefers-reduced-motion: reduce) { .carrello:not([hidden]) { animation: none; } }
+</style>

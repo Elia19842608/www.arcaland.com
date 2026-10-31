@@ -78,7 +78,16 @@ const jsonLd = {
           {p.area_sicurezza && <li><span>Area</span>{misura(p.area_sicurezza)}</li>}
         </ul>
         <div class="azioni">
-          <a class="bottone bottone-primario" href="/richiesta"><Icona nome="plus" />Aggiungi alla richiesta</a>
+          <form class="aggiungi-form" action="/richiesta" method="get" data-aggiungi-form data-slug={p.slug} data-codice={p.codice} data-nome={p.nome}>
+            <input type="hidden" name="aggiungi" value={p.slug} />
+            <label class="sr-only" for="quantita">Quantità</label>
+            <div class="quantita">
+              <button type="button" data-passo-scheda="-1" aria-label="Togli uno"><Icona nome="meno" /></button>
+              <input id="quantita" name="quantita" type="number" inputmode="numeric" min="1" max="999" step="1" value="1" />
+              <button type="button" data-passo-scheda="1" aria-label="Aggiungi uno"><Icona nome="plus" /></button>
+            </div>
+            <button type="submit" class="bottone bottone-primario"><Icona nome="plus" />Aggiungi alla richiesta</button>
+          </form>
           {p.pdf_scheda && <a class="bottone bottone-secondario" href={p.pdf_scheda} download><Icona nome="download" />Scheda tecnica</a>}
         </div>
         {p.pdf_certificato && <p class="certificato"><Icona nome="check" />Conforme alla norma EN 1176, certificato scaricabile qui sotto.</p>}
@@ -141,6 +150,8 @@ const jsonLd = {
   .fatti li { display: grid; gap: 0.1rem; padding: var(--spazio-3); background: var(--carta); font-family: var(--font-titoli); font-weight: 650; font-size: var(--testo-l); font-variant-numeric: tabular-nums; white-space: nowrap; }
   .fatti span { font-family: var(--font-testo); font-weight: 400; font-size: var(--testo-xs); color: var(--inchiostro-3); }
   .azioni { display: flex; flex-wrap: wrap; gap: var(--spazio-3); margin-top: var(--spazio-5); }
+  .aggiungi-form { display: flex; flex-wrap: wrap; gap: var(--spazio-2); }
+  .aggiungi-form .quantita { min-height: 2.75rem; }
   .certificato { display: flex; align-items: center; gap: var(--spazio-2); margin-top: var(--spazio-4); font-size: var(--testo-s); color: var(--cielo-scuro); }
   .certificato :global(svg) { width: 1.2rem; height: 1.2rem; flex: none; }
 

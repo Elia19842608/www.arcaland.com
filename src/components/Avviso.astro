@@ -1,0 +1,14 @@
+<div class="avviso" role="status" aria-live="polite" data-avviso></div>
+<style>
+  .avviso {
+    position: fixed; z-index: 60; left: 50%; bottom: 1.25rem; transform: translate(-50%, 1rem);
+    display: flex; align-items: center; gap: var(--spazio-4);
+    width: max-content; max-width: min(calc(100vw - 2rem), 30rem); padding: 0.8rem 1rem 0.8rem 1.1rem; border-radius: var(--raggio-l);
+    background: var(--inchiostro); color: var(--carta); box-shadow: 0 12px 32px -8px rgb(34 32 24 / 0.45);
+    font-size: var(--testo-s); opacity: 0; pointer-events: none;
+    transition: opacity var(--durata) var(--curva), transform var(--durata) var(--curva);
+  }
+  .avviso:global(.visibile) { opacity: 1; transform: translate(-50%, 0); pointer-events: auto; }
+  .avviso :global(a) { color: var(--oro); font-weight: 700; white-space: nowrap; text-decoration-color: currentColor; }
+  .avviso :global(p) { margin: 0; flex: 1 1 auto; min-width: 0; }
+</style>

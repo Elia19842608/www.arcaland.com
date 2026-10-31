@@ -58,3 +58,19 @@ table { font-variant-numeric: tabular-nums; }
 .bottone svg { width: 1.15em; height: 1.15em; }
 
 .tratteggio { height: 1.5px; background: var(--tratteggio); border: 0; margin: 0; }
+
+.quantita { display: inline-flex; align-items: stretch; border: 1.5px solid var(--linea-forte); border-radius: var(--raggio); background: #fff; }
+.quantita button { width: 2.5rem; border: 0; background: none; cursor: pointer; display: grid; place-items: center; color: var(--inchiostro); }
+.quantita button:hover { background: var(--carta-2); }
+.quantita button svg { width: 1rem; height: 1rem; }
+.quantita input {
+  width: 3.25rem; min-height: 2.5rem; border: 0; border-inline: 1px solid var(--linea); text-align: center;
+  font-family: var(--font-titoli); font-weight: 650; font-variant-numeric: tabular-nums; -moz-appearance: textfield; background: transparent;
+}
+.quantita input::-webkit-inner-spin-button, .quantita input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+.link-rimuovi {
+  display: inline-flex; align-items: center; gap: 0.3rem; min-height: 2.5rem; padding: 0 0.4rem;
+  border: 0; background: none; cursor: pointer; font-size: var(--testo-s); color: var(--inchiostro-2); border-radius: var(--raggio);
+}
+.link-rimuovi:hover { color: var(--terracotta-scuro); background: var(--carta-2); }
+.link-rimuovi svg { width: 1rem; height: 1rem; }

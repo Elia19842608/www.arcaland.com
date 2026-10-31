@@ -30,7 +30,7 @@ const eta = p.eta_min !== undefined && p.eta_max !== undefined ? `${p.eta_min}â€
       {p.pdf_certificato && <li class="norma"><Icona nome="check" />EN 1176</li>}
     </ul>
   </div>
-  <a class="aggiungi" href="/richiesta" aria-label={`Aggiungi ${p.nome} alla richiesta`}><Icona nome="plus" /></a>
+  <a class="aggiungi" href={`/richiesta?aggiungi=${p.slug}`} data-aggiungi data-slug={p.slug} data-codice={p.codice} data-nome={p.nome} aria-label={`Aggiungi ${p.nome} alla richiesta`}><Icona nome="plus" /></a>
 </article>
 
 <style>

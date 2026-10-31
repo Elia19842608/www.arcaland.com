@@ -2,6 +2,8 @@
 import '../styles/base.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import CarrelloPannello from '../components/CarrelloPannello.astro';
+import Avviso from '../components/Avviso.astro';
 
 interface Props { titolo: string; descrizione?: string }
 const { titolo, descrizione = 'Arcaland progetta, produce, posa e ispeziona giochi e arredi urbani in legno, acciaio e misti, secondo la norma EN 1176.' } = Astro.props;
@@ -31,6 +33,12 @@ const canonico = new URL(Astro.url.pathname, Astro.site);
       <slot />
     </main>
     <Footer />
+    <CarrelloPannello />
+    <Avviso />
+    <script>
+      import { avviaCarrello } from '../scripts/carrello-client';
+      avviaCarrello();
+    </script>
   </body>
 </html>
 

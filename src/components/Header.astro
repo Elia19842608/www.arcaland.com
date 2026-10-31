@@ -9,6 +9,9 @@ const percorso = Astro.url.pathname;
       <span class="segno" aria-hidden="true"></span>
       <span class="nome">arcaland</span>
     </a>
+    <button class="carrello-btn" type="button" aria-label="Richiedi preventivo, 0 articoli" data-apri-carrello>
+      <Icona nome="clipboard" /><span class="testo-btn" aria-hidden="true">Richiedi preventivo</span><span class="badge" data-badge-carrello hidden>0</span>
+    </button>
     <button class="apri-menu" type="button" aria-expanded="false" aria-controls="menu-principale">
       <Icona nome="menu" class="i-apri" /><Icona nome="x" class="i-chiudi" />
       <span>Menu</span>
@@ -48,7 +51,7 @@ const percorso = Astro.url.pathname;
     backdrop-filter: saturate(1.4) blur(10px);
     border-bottom: 1px solid var(--linea);
   }
-  .riga { display: flex; align-items: center; gap: var(--spazio-5); min-height: 4.25rem; }
+  .riga { display: flex; align-items: center; gap: var(--spazio-3) var(--spazio-5); min-height: 4.25rem; }
   .marchio { display: inline-flex; align-items: center; gap: 0.55rem; text-decoration: none; margin-right: auto; }
   .segno {
     width: 1.35rem; height: 1.55rem; background: var(--oro);
@@ -56,6 +59,22 @@ const percorso = Astro.url.pathname;
   }
   .nome { font-family: var(--font-titoli); font-weight: 800; font-stretch: 88%; font-size: 1.45rem; letter-spacing: -0.035em; }
   .menu { display: flex; align-items: center; gap: var(--spazio-5); }
+  .riga { position: relative; }
+  .carrello-btn {
+    order: 3; position: relative; display: inline-flex; align-items: center; gap: 0.4rem; min-height: 2.75rem; padding: 0 0.85rem;
+    background: var(--oro); border: 0; border-radius: var(--raggio); cursor: pointer; color: var(--inchiostro);
+    font-family: var(--font-titoli); font-weight: 650; font-size: var(--testo-s);
+    transition: background-color var(--durata) var(--curva);
+  }
+  .carrello-btn:hover { background: var(--oro-scuro); }
+  .carrello-btn :global(svg) { width: 1.2rem; height: 1.2rem; }
+  .badge {
+    display: inline-grid; place-items: center; min-width: 1.35rem; height: 1.35rem; padding: 0 0.3rem; border-radius: 999px;
+    background: var(--inchiostro); color: var(--carta); font-size: var(--testo-xs); font-weight: 750; font-variant-numeric: tabular-nums;
+  }
+  .badge:global(.batte) { animation: batte 420ms var(--curva); }
+  @keyframes batte { 40% { transform: scale(1.35); } }
+  @media (prefers-reduced-motion: reduce) { .badge:global(.batte) { animation: none; } }
   .menu ul { display: flex; gap: var(--spazio-1); list-style: none; margin: 0; padding: 0; }
   .menu ul a {
     display: block; padding: 0.5rem 0.7rem; border-radius: var(--raggio);
@@ -63,6 +82,7 @@ const percorso = Astro.url.pathname;
     color: var(--inchiostro-2); transition: color var(--durata) var(--curva), background-color var(--durata) var(--curva);
   }
   .menu ul a:hover { color: var(--inchiostro); background: var(--carta-2); }
+  @media (min-width: 1024px) { .cta { display: none; } }
   .menu ul a[aria-current='page'] { color: var(--inchiostro); box-shadow: inset 0 -2px 0 var(--oro); border-radius: 0; }
   .apri-menu {
     display: none; align-items: center; gap: 0.4rem; min-height: 2.75rem; padding: 0 0.8rem;
@@ -74,7 +94,8 @@ const percorso = Astro.url.pathname;
   .apri-menu[aria-expanded='true'] :global(.i-chiudi) { display: block; }
 
   @media (max-width: 1023px) {
-    .apri-menu { display: inline-flex; }
+    .apri-menu { display: inline-flex; order: 4; }
+    .testo-btn { display: none; }
     .menu {
       display: none; position: absolute; inset: 100% 0 auto 0;
       flex-direction: column; align-items: stretch; gap: var(--spazio-4);
