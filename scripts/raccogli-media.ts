@@ -5,6 +5,7 @@ import { readdirSync, readFileSync, writeFileSync, mkdirSync, copyFileSync, stat
 import { join, basename } from 'node:path';
 import { parse, stringify } from 'yaml';
 import { abbinaFile } from '../src/lib/import/media';
+import { ottimizzaImmagine } from '../src/lib/import/immagini';
 
 const sorgente = process.argv[2];
 if (!sorgente) { console.error('Indica la cartella con le foto e i PDF.'); process.exit(1); }
@@ -29,7 +30,7 @@ function* fileIn(dir: string): Generator<string> {
 
 const righe = ['file,esito,codice,tipo'];
 const modificate = new Set<string>();
-let abbinati = 0, scartati = 0;
+let abbinati = 0, scartati = 0, risparmiati = 0;
 const csv = (s: string) => `"${s.replace(/"/g, '""')}"`;
 
 for (const percorso of fileIn(sorgente)) {
@@ -38,9 +39,16 @@ for (const percorso of fileIn(sorgente)) {
   if (!a) { righe.push([csv(percorso), 'non abbinato', '', ''].join(',')); scartati++; continue; }
   const scheda = schede.get(a.codice)!;
   const slug = String(scheda.dati.slug);
-  const pulito = nome.toLowerCase().replace(/[^a-z0-9.]+/g, '-');
+  let pulito = nome.toLowerCase().replace(/[^a-z0-9.]+/g, '-');
   mkdirSync(join('public/media/prodotti', slug), { recursive: true });
-  copyFileSync(percorso, join('public/media/prodotti', slug, pulito));
+  const raster = /\.(jpe?g|png|webp|avif|tiff?)$/i.test(pulito);
+  if (raster) {
+    pulito = pulito.replace(/\.[a-z]+$/, '.webp');
+    const r = await ottimizzaImmagine(percorso, join('public/media/prodotti', slug, pulito));
+    risparmiati += statSync(percorso).size - r.byte;
+  } else {
+    copyFileSync(percorso, join('public/media/prodotti', slug, pulito));
+  }
   const url = `/media/prodotti/${slug}/${pulito}`;
   const d = scheda.dati;
   if (a.tipo === 'render' || a.tipo === 'reale') {
@@ -62,4 +70,4 @@ for (const codice of modificate) {
 }
 mkdirSync('dati', { recursive: true });
 writeFileSync('dati/mappa-media.csv', righe.join('\n') + '\n');
-console.log(`Abbinati ${abbinati} file su ${modificate.size} prodotti, non abbinati ${scartati}. Dettaglio: dati/mappa-media.csv`);
+console.log(`Abbinati ${abbinati} file su ${modificate.size} prodotti, non abbinati ${scartati}. Peso risparmiato: ${(risparmiati / 1048576).toFixed(1)} MB. Dettaglio: dati/mappa-media.csv`);
