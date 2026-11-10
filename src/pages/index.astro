@@ -1,18 +1,24 @@
 ---
 import Base from '../layouts/Base.astro';
-import Racconto from '../components/home/Racconto.astro';
-import Linee from '../components/home/Linee.astro';
+import ParcoCheNasce from '../components/home/ParcoCheNasce.astro';
+import MappaComuni from '../components/home/MappaComuni.astro';
+import PrimaDopo from '../components/home/PrimaDopo.astro';
+import Famiglie from '../components/home/Famiglie.astro';
 import Hexaplay from '../components/home/Hexaplay.astro';
-import Lavori from '../components/home/Lavori.astro';
 import Chiusura from '../components/home/Chiusura.astro';
 import { prodottiAttivi } from '../lib/catalogo/carica';
+import '../styles/home.css';
 
 const prodotti = await prodottiAttivi();
 ---
-<Base titolo="Arcaland" descrizione="Arcaland progetta aree gioco e arredo urbano in legno, acciaio e misti, ne segue la posa e le controlla con ispezioni periodiche secondo la UNI EN 1176.">
-  <Racconto />
-  <Linee prodotti={prodotti} />
+<Base titolo="Arcaland" descrizione="Arcaland progetta, produce e posa parchi gioco e arredo urbano in legno, acciaio o misti. Poi li segue con ispezioni UNI EN 1176 e manutenzione.">
+  <ParcoCheNasce />
+  <MappaComuni />
+  <PrimaDopo />
+  <Famiglie prodotti={prodotti} />
   <Hexaplay />
-  <Lavori />
   <Chiusura />
 </Base>
+<script>
+  import '../scripts/home-client.ts';
+</script>

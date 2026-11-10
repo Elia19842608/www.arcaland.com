@@ -1,0 +1,16 @@
+import fs from 'fs';
+import {feature} from 'topojson-client';
+import {geoConicConformal, geoPath} from 'd3-geo';
+const topo=JSON.parse(fs.readFileSync('node_modules/world-atlas/countries-10m.json'));
+const paesi=feature(topo,topo.objects.countries).features;
+const comuni=JSON.parse(fs.readFileSync('/tmp/gen/comuni-serviti.json'));
+const W=760,H=600;
+const box={type:'Feature',geometry:{type:'MultiPoint',coordinates:[[7.3,46.0],[12.9,46.0],[7.3,42.9],[12.9,42.9],[10.1,46.3],[10.1,42.85]]}};
+const proj=geoConicConformal().parallels([42,46]).rotate([-11,0]).fitExtent([[10,10],[W-10,H-10]],box).clipExtent([[0,0],[W,H]]);
+const path=geoPath(proj).digits(1);
+const it=paesi.find(f=>f.properties.name==='Italy');
+const vicini=paesi.filter(f=>['France','Switzerland','Austria','Slovenia','Croatia','San Marino','Vatican','Germany','Liechtenstein','Bosnia and Herz.','Monaco'].includes(f.properties.name));
+const punti=comuni.filter(c=>c.lat>42.9).map(c=>{const [x,y]=proj([c.lon,c.lat]);return {...c,x:+x.toFixed(1),y:+y.toFixed(1)}});
+const reg=[['Piemonte',7.9,45.05],['Lombardia',9.85,45.75],['Veneto',11.95,45.75],['Trentino-Alto Adige',11.3,46.45],['Friuli V.G.',13.05,46.15],['Liguria',8.25,44.32],['Emilia-Romagna',11.0,44.42],['Toscana',11.05,43.35],['Marche',13.1,43.35],['Umbria',12.45,42.95],['Abruzzo',13.85,42.25]].map(([n,lo,la])=>{const [x,y]=proj([lo,la]);return {n,x:+x.toFixed(0),y:+y.toFixed(0)}});
+fs.writeFileSync('/tmp/gen/mappa.json',JSON.stringify({W,H,italia:path(it),vicini:vicini.map(f=>path(f)).filter(Boolean),punti,reg}));
+console.log('ok',path(it).length,punti.length,reg.map(r=>r.n+':'+r.x+','+r.y).join(' '));

@@ -1,0 +1,62 @@
+---
+import dati from '../../data/mappa-comuni.json';
+import { raggioPunto } from '../../lib/home/home';
+const { W, H, italia, vicini, punti, reg } = dati;
+const max = Math.max(...punti.map((p) => p.pop));
+const ordinati = [...punti].sort((a, b) => b.pop - a.pop);
+const grandi = punti.filter((p) => p.pop > 100000);
+const perRegione = Object.entries(punti.reduce<Record<string, number>>((m, p) => ((m[p.reg] = (m[p.reg] ?? 0) + 1), m), {})).sort((a, b) => b[1] - a[1]);
+const conIspezioni = punti.filter((p) => p.s.includes('I')).length;
+const conManutenzioni = punti.filter((p) => p.s.includes('M')).length;
+const servizi = (s: string) => [s.includes('I') && 'Ispezioni', s.includes('M') && 'Manutenzioni straordinarie'].filter(Boolean).join(' · ');
+---
+<section class="casa-sez isp" id="ispezioni" aria-labelledby="titolo-isp">
+  <div class="contenitore griglia2">
+    <div>
+      <p class="occhiello">Ispezioni e manutenzioni</p>
+      <h2 id="titolo-isp">Una spunta per ogni comune che seguiamo.</h2>
+      <p class="lead">Ogni spunta è un comune dove facciamo le ispezioni UNI EN 1176 o le manutenzioni straordinarie delle aree gioco. Più grande è il cerchio, più abitanti ha il comune.</p>
+      <dl class="numeri">
+        <div><dt>comuni</dt><dd>{punti.length}</dd></div>
+        <div><dt>con ispezioni</dt><dd>{conIspezioni}</dd></div>
+        <div><dt>con manutenzioni</dt><dd>{conManutenzioni}</dd></div>
+      </dl>
+      <label for="cerca-comune">Il tuo comune c'è?</label>
+      <input id="cerca-comune" list="lista-comuni" placeholder="Scrivi il nome del comune" autocomplete="off" data-cerca />
+      <datalist id="lista-comuni">{[...punti].sort((a, b) => a.n.localeCompare(b.n)).map((p) => <option value={p.n} />)}</datalist>
+      <p class="esito" data-esito aria-live="polite"></p>
+      <div class="chips" role="group" aria-label="Mostra una regione">
+        {perRegione.map(([r, n]) => <button type="button" class="chip" data-reg={r} aria-pressed="false">{r} <b>{n}</b></button>)}
+      </div>
+    </div>
+    <div class="mappa" data-mappa>
+      <svg viewBox={`0 0 ${W} ${H}`} role="group" aria-label={`Mappa dei ${punti.length} comuni seguiti`}>
+        <defs>
+          <pattern id="onde" width="18" height="10" patternUnits="userSpaceOnUse"><path d="M0 6q4.5-4 9 0t9 0" fill="none" stroke="#B8D3DE" stroke-width="1.4" /></pattern>
+          <clipPath id="taglio-mappa"><rect width={W} height={H} rx="28" /></clipPath>
+        </defs>
+        <g clip-path="url(#taglio-mappa)">
+          <rect width={W} height={H} fill="#DCEBF1" /><rect width={W} height={H} fill="url(#onde)" />
+          {vicini.map((d) => <path d={d} fill="#EDE6D6" stroke="#C9BFA9" stroke-width="1" />)}
+          <path d={italia} fill="#FBF8F2" stroke="#222018" stroke-width="2" stroke-linejoin="round" />
+          <g aria-hidden="true">
+            {reg.map((r) => <text class="reg" x={r.x} y={r.y} text-anchor="middle">{r.n.toUpperCase()}</text>)}
+            {grandi.map((p) => <text class="cit" x={p.x + 16} y={p.y + 5}>{p.n}</text>)}
+          </g>
+          {ordinati.map((p) => {
+            const r = raggioPunto(p.pop, max);
+            return (
+              <g class="pt" tabindex="0" role="img" transform={`translate(${p.x} ${p.y})`} aria-label={`${p.n} (${p.pr}): ${servizi(p.s)}`}
+                data-n={p.n} data-pr={p.pr} data-reg={p.reg} data-pop={p.pop} data-servizi={servizi(p.s)}>
+                <circle r={r} fill="#E6AF0B" stroke="#222018" stroke-width="2" />
+                <path d={`M${(-r * 0.42).toFixed(1)} 0l${(r * 0.3).toFixed(1)} ${(r * 0.32).toFixed(1)} ${(r * 0.55).toFixed(1)} ${(-r * 0.62).toFixed(1)}`} fill="none" stroke="#222018" stroke-width={Math.max(1.8, r * 0.2).toFixed(1)} stroke-linecap="round" stroke-linejoin="round" />
+              </g>
+            );
+          })}
+        </g>
+      </svg>
+      <div class="tip" data-tip aria-hidden="true"></div>
+      <p class="nota">Comuni con ispezioni o manutenzioni straordinarie nel 2025–2026.</p>
+    </div>
+  </div>
+</section>

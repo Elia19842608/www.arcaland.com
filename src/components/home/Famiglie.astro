@@ -1,0 +1,30 @@
+---
+import { contaPerLinea } from '../../lib/catalogo/conteggi';
+import type { Prodotto } from '../../lib/catalogo/tipi';
+interface Props { prodotti: Prodotto[] }
+const { prodotti } = Astro.props;
+const linee = contaPerLinea(prodotti);
+const WP = 'https://arcaland.com/site/wp-content/uploads/2026/11/';
+const aspetto: Record<string, { bg: string; img: string }> = {
+  giochi: { bg: '#F6E3A6', img: WP + 'giochi-home.png' },
+  'arredo-urbano': { bg: '#E3EFF4', img: WP + 'arredo-urbano-home.png' },
+  'percorsi-sportivi': { bg: '#F2D2C4', img: WP + 'sport-all-aperto-home.png' },
+};
+const n = (x: number) => (x === 1 ? '1 prodotto' : `${x} prodotti`);
+---
+<section class="casa-sez fam" aria-labelledby="titolo-fam">
+  <div class="contenitore interno">
+    <div class="testa">
+      <div><p class="occhiello">Il catalogo</p><h2 id="titolo-fam">{prodotti.length} prodotti,<br />{linee.length === 3 ? 'tre' : linee.length} grandi famiglie.</h2></div>
+      <a class="bottone bottone-primario" href="/prodotti">Esplora i prodotti</a>
+    </div>
+    <ul class="linee">
+      {linee.map((l) => (
+        <li><a class="linea" href={`/prodotti?linea=${l.linea}`} style={`--bg:${aspetto[l.linea]?.bg ?? '#F4EEE3'}`}>
+          {aspetto[l.linea] && <img alt="" src={aspetto[l.linea].img} loading="lazy" onerror="this.remove()" />}
+          <div class="t"><h3>{l.etichetta}</h3><span>{n(l.n)}</span></div>
+        </a></li>
+      ))}
+    </ul>
+  </div>
+</section>

@@ -1,0 +1,39 @@
+---
+import scena from './parco-scena.svg?raw';
+const fasi = [
+  { nome: 'Progettiamo', testo: 'Partiamo dal tuo spazio: misure, età dei bambini, aree di sicurezza. Il parco nasce prima su carta.', link: 'Parlaci del tuo spazio', href: '/richiesta' },
+  { nome: 'Produciamo', testo: 'Giochi e arredi in legno, acciaio o misti. Ogni pezzo viene preparato prima di arrivare al parco.', link: 'Esplora i prodotti', href: '/prodotti' },
+  { nome: 'Posiamo', testo: 'Montiamo tutto sul posto, pezzo dopo pezzo. E il parco apre.', link: 'Richiedi un preventivo', href: '/richiesta' },
+  { nome: 'Ispezioniamo', testo: 'Controlliamo ogni gioco secondo la UNI EN 1176. Se qualcosa non va, lo troviamo noi prima dei bambini.', link: 'Prenota un’ispezione', href: '/richiesta' },
+  { nome: 'Ripariamo', testo: 'Via il pezzo usurato, dentro quello nuovo. Il gioco torna sicuro.', link: 'Richiedi un intervento', href: '/richiesta' },
+];
+---
+<section class="nasce" data-nasce aria-label="Come lavoriamo">
+  <div class="palco2" data-palco data-f="0">
+    <div class="griglia"></div>
+    <div class="testi">
+      <div class="apertura" data-testo="0">
+        <h1>Costruiamo parchi gioco. E <em>ce ne prendiamo cura</em>.</h1>
+        <p>Giochi e arredi in legno, acciaio o misti. Poi ispezioni UNI EN 1176 e manutenzione.</p>
+        <div class="az">
+          <a class="bottone bottone-primario" href="/prodotti">Esplora i prodotti</a>
+          <a class="bottone bottone-secondario" href="#ispezioni">Ispezioni e manutenzione</a>
+        </div>
+      </div>
+      {fasi.map((f, i) => (
+        <div class="fase" data-f={i + 1} data-testo={i + 1}>
+          <span class="num" aria-hidden="true">{i + 1}<small>/5</small></span>
+          <h2>{f.nome}</h2>
+          <p>{f.testo}</p>
+          <a href={f.href} class="freccia">{f.link} <span aria-hidden="true">→</span></a>
+        </div>
+      ))}
+    </div>
+    <ol class="passi" aria-label="Le cinque tappe">
+      {fasi.map((f, i) => <li><button type="button" data-vai={i + 1}><i aria-hidden="true">{i + 1}</i>{f.nome}</button></li>)}
+    </ol>
+    <Fragment set:html={scena} />
+    <span class="scorri" aria-hidden="true">Scorri: guarda come nasce un parco ↓</span>
+    <div class="barra" data-barra></div>
+  </div>
+</section>

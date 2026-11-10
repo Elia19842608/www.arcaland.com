@@ -1,0 +1,34 @@
+---
+import interventi from '../../data/interventi.json';
+const primo = interventi[0];
+---
+<section class="casa-sez pd" id="manutenzioni" aria-labelledby="titolo-pd">
+  <div class="contenitore griglia2">
+    <div>
+      <p class="occhiello">Manutenzioni straordinarie</p>
+      <h2 id="titolo-pd">Prima e dopo.<br />Trascina e guarda.</h2>
+      <div class="casi" role="group" aria-label="Scegli un intervento">
+        {interventi.map((c, i) => (
+          <button type="button" class="caso" data-caso={i} aria-pressed={i === 0 ? 'true' : 'false'}>
+            <span class="n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+            <span><b>{c.titolo}</b><small>{c.luogo}</small></span>
+          </button>
+        ))}
+      </div>
+    </div>
+    <div>
+      <div class="confronto" data-confronto>
+        <div class="lato"><img data-dopo alt="Dopo l'intervento" src={primo.dopo} loading="lazy" onerror="this.style.opacity=0" /></div>
+        <div class="lato prima" data-prima>
+          <img data-prima-img alt="Prima dell'intervento" hidden={!primo.prima} src={primo.prima ?? undefined} />
+          <span class="vuota" data-prima-vuota hidden={!!primo.prima}>Foto del prima in arrivo</span>
+        </div>
+        <span class="etichetta p" aria-hidden="true">PRIMA</span><span class="etichetta d" aria-hidden="true">DOPO</span>
+        <div class="maniglia"></div>
+        <input type="range" min="0" max="100" value="50" data-cursore aria-label="Sposta per confrontare prima e dopo" />
+      </div>
+      <p class="desc" data-desc aria-live="polite">{primo.testo}</p>
+    </div>
+  </div>
+  <script type="application/json" id="dati-interventi" set:html={JSON.stringify(interventi)} />
+</section>

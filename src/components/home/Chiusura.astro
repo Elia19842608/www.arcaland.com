@@ -1,21 +1,9 @@
-<section class="chiusura" aria-labelledby="titolo-chiusura">
-  <div class="contenitore interno">
-    <div class="area" aria-hidden="true"><span>? × ? m</span></div>
-    <div>
-      <h2 id="titolo-chiusura">Hai un’area da attrezzare?</h2>
-      <p>Raccontaci misure, utenti e tempi. Ti prepariamo un progetto con l'offerta, posa e area di sicurezza comprese.</p>
-      <div class="azioni">
-        <a class="bottone bottone-primario" href="/richiesta">Richiedi un preventivo</a>
-        <a class="bottone bottone-secondario" href="/prodotti">Sfoglia il catalogo</a>
-      </div>
+<section class="casa-sez fine" aria-labelledby="titolo-chiusura">
+  <div class="contenitore griglia2">
+    <h2 id="titolo-chiusura">Hai un parco da fare o da sistemare?</h2>
+    <div class="az">
+      <a class="bottone bottone-primario" href="/richiesta">Richiedi un preventivo</a>
+      <a class="bottone bottone-secondario" href="/prodotti">Sfoglia il catalogo</a>
     </div>
   </div>
 </section>
-<style>
-  .chiusura { margin-top: var(--spazio-8); }
-  .interno { display: grid; grid-template-columns: auto 1fr; gap: var(--spazio-7); align-items: center; padding: var(--spazio-7); background: #fff; border-radius: var(--raggio-l); box-shadow: 0 0 0 1px var(--linea); }
-  .area { display: grid; place-items: center; width: 14rem; aspect-ratio: 4 / 3; border: 2px dashed var(--cielo-scuro); border-radius: 8px; background: var(--cielo-chiaro); font-family: var(--font-titoli); font-weight: 700; font-size: var(--titolo-s); color: var(--cielo-scuro); font-variant-numeric: tabular-nums; }
-  p { color: var(--inchiostro-2); font-size: var(--testo-l); line-height: 1.5; }
-  .azioni { display: flex; flex-wrap: wrap; gap: var(--spazio-3); }
-  @media (max-width: 760px) { .interno { grid-template-columns: 1fr; padding: var(--spazio-5); } .area { width: 9rem; } }
-</style>

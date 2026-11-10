@@ -1,30 +1,12 @@
----
-const esagoni = [[0,0],[1,0],[0.5,0.866],[1.5,0.866],[2,0],[1,1.732]];
-const r = 46;
----
-<section class="hexaplay" aria-labelledby="titolo-hexaplay">
-  <div class="contenitore interno">
-    <div class="testo">
-      <h2 id="titolo-hexaplay">Hexaplay, il gioco che si compone</h2>
-      <p>Torri esagonali a tre altezze, scivoli, rampe, ponti tibetani e coperture: si accostano lato contro lato per creare un'area su misura. Presto potrai comporlo direttamente qui.</p>
+<section class="casa-sez hexa2" aria-labelledby="titolo-hexaplay">
+  <div class="contenitore"><div class="scatola">
+    <div class="img" style="background-image:url(https://arcaland.com/site/wp-content/uploads/2025/09/Exaplay-Anteprima.jpg)" role="img" aria-label="Una composizione Hexaplay"></div>
+    <div class="t">
+      <div class="esa" aria-hidden="true"><i></i><i></i><i></i></div>
+      <p class="occhiello">Hexaplay</p>
+      <h2 id="titolo-hexaplay">Il gioco modulare che componi tu.</h2>
+      <p class="d">Torri esagonali, scivoli, rampe e ponti che si accostano lato contro lato. Presto potrai comporre il tuo Hexaplay qui sul sito e mandarci la richiesta con l'elenco dei pezzi.</p>
       <a class="bottone bottone-primario" href="/prodotti?linea=giochi&sottocategoria=Hexaplay">Scopri i moduli Hexaplay</a>
     </div>
-    <svg viewBox="-60 -60 360 290" role="img" aria-labelledby="hx-t" class="esagoni">
-      <title id="hx-t">Esempio di composizione Hexaplay: sei moduli esagonali accostati</title>
-      {esagoni.map(([x, y], i) => {
-        const cx = x * r * 1.732, cy = y * r * 1.5 / 0.866 * 0.866 * 1.155;
-        const punti = Array.from({ length: 6 }, (_, k) => { const a = Math.PI / 180 * (60 * k - 30); return `${(cx + r * Math.cos(a)).toFixed(1)},${(cy + r * Math.sin(a)).toFixed(1)}`; }).join(' ');
-        return <polygon points={punti} class:list={['esagono', { pieno: i === 0 || i === 3 }]} />;
-      })}
-    </svg>
-  </div>
+  </div></div>
 </section>
-<style>
-  .hexaplay { margin-top: var(--spazio-8); background: var(--cielo-chiaro); border-block: 1.5px dashed color-mix(in srgb, var(--cielo-scuro) 50%, transparent); }
-  .interno { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr); gap: var(--spazio-7); align-items: center; padding-block: var(--spazio-7); }
-  .testo p { color: var(--cielo-scuro); font-size: var(--testo-l); line-height: 1.5; }
-  .esagoni { width: 100%; max-height: 18rem; }
-  .esagono { fill: #fff; stroke: var(--inchiostro); stroke-width: 1.5; }
-  .esagono.pieno { fill: var(--oro); }
-  @media (max-width: 899px) { .interno { grid-template-columns: 1fr; gap: var(--spazio-5); } }
-</style>
